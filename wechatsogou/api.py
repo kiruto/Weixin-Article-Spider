@@ -28,12 +28,11 @@ class WechatSogouApi(WechatSogouBasic):
             page: 搜索的页数
 
         Returns:
-            列表，每一项均是{'name':name,'wechatid':wechatid,'jieshao':jieshao,'renzhen':renzhen,'qrcode':qrcodes,'img':img,'url':url}
             name: 公众号名称
-            wechatid: 公众号id
-            jieshao: 介绍
-            renzhen: 认证，为空表示未认证
-            qrcode: 二维码
+            wechat_id: 公众号id
+            introduction: 介绍
+            authentication: 认证，为空表示未认证
+            qr_codes: 二维码
             img: 头像图片
             url: 最近文章地址
         """
@@ -48,9 +47,9 @@ class WechatSogouApi(WechatSogouBasic):
         for info_url in info_urls:
             url.append(info_url.attrib['href'])
         name = list()
-        wechatid = list()
-        jieshao = list()
-        renzhen = list()
+        wechat_id = list()
+        introduction = list()
+        authentication = list()
         info_instructions = page.xpath(u"//div[@class='txt-box']")
         for info_instruction in info_instructions:
             cache = self._get_elem_text(info_instruction)
@@ -58,26 +57,26 @@ class WechatSogouApi(WechatSogouBasic):
             cache_list = cache.split('\n')
             cache_re = re.split(u'微信号：|功能介绍：|认证：|最近文章：', cache_list[0])
             name.append(cache_re[0])
-            wechatid.append(cache_re[1])
+            wechat_id.append(cache_re[1])
             if "authnamewrite" in cache_re[2]:
-                jieshao.append(re.sub("authnamewrite\('[0-9]'\)", "", cache_re[2]))
-                renzhen.append(cache_re[3])
+                introduction.append(re.sub("authnamewrite\('[0-9]'\)", "", cache_re[2]))
+                authentication.append(cache_re[3])
             else:
-                jieshao.append(cache_re[2])
-                renzhen.append('')
-        qrcodes = list()
+                introduction.append(cache_re[2])
+                authentication.append('')
+        qr_codes = list()
         info_qrcodes = page.xpath(u"//div[@class='pos-ico']/div/img")
         for info_qrcode in info_qrcodes:
-            qrcodes.append(info_qrcode.attrib['src'])
+            qr_codes.append(info_qrcode.attrib['src'])
         returns = list()
-        for i in range(len(qrcodes)):
+        for i in range(len(qr_codes)):
             returns.append(
                 {
                     'name': name[i],
-                    'wechatid': wechatid[i],
-                    'jieshao': jieshao[i],
-                    'renzhen': renzhen[i],
-                    'qrcode': qrcodes[i],
+                    'wechat_id': wechat_id[i],
+                    'introduction': introduction[i],
+                    'authentication': authentication[i],
+                    'qr_codes': qr_codes[i],
                     'img': img[i],
                     'url': url[i]
                 }
