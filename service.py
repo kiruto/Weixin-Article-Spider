@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import os
 
 import flask
 from flask import Flask
@@ -10,6 +11,15 @@ from wechatsogou import WechatSogouApi
 
 app = Flask(__name__)
 _api = WechatSogouApi()
+
+if not os.path.exists(config.local_storage_path):
+    os.makedirs(config.local_storage_path)
+
+if not os.path.exists(config.db_path):
+    os.makedirs(config.local_storage_path)
+
+if not os.path.exists(config.log_path):
+    os.makedirs(config.log_path)
 
 
 @app.route('/')

@@ -3,4 +3,5 @@ ENV/
 cache/
 data/
 **.pyc
+**.log
 bin/

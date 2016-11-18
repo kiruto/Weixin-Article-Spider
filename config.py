@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import os
 
-debug = True
+debug = False
 
 # 缓存配置
 cache_dir = 'cache'
@@ -41,10 +41,18 @@ agent = (
     "Opera/9.80 (Macintosh; Intel Mac OS X 10.6.8; U; fr) Presto/2.9.168 Version/11.52",
 )
 
+# 当前目录
 current_path = os.path.dirname(__file__) + os.sep
+
+# 数据保存目录
 local_storage_path = os.path.join(current_path, "data", "html") + os.sep
+
+# 数据库目录
 db_path = os.path.join(current_path, "data") + os.sep
 db_file = 'meta.db'
+
+# 日志根目录
+log_path = os.path.join(current_path, "data", "log") + os.sep
 
 # 0755 permission needed
 phantomjs_path = os.path.join(current_path, "bin", "PhantomJS") + os.sep + "phantomjs"

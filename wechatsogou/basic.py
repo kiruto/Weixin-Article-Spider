@@ -152,6 +152,9 @@ class WechatSogouBasic(WechatSogouBase):
         driver.get(url)
         time.sleep(1)
         text = self._replace_html(driver.page_source)
+        if u'用户您好，您的访问过于频繁，为确认本次访问为正常用户行为，需要您协助验证' in text:
+            self._vcode_url = driver.current_url
+            raise WechatSogouVcodeException('weixin.sogou.com verification code')
         driver.close()
         return text
 
