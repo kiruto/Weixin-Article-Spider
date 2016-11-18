@@ -3,6 +3,7 @@
 import flask
 from flask import Flask
 
+import botdriver
 from common.downloader import Downloader
 import config
 from wechatsogou import WechatSogouApi
@@ -63,6 +64,13 @@ def list_all_articles_by_id(account_id):
 @app.route('/save')
 def save_page():
     return Downloader().request('http://mp.weixin.qq.com/s?timestamp=1479366299&src=3&ver=1&signature=Hgvz-IGx2pIJPosLHdR8yqwE8wo1jDbAOGZxFavHFvgo133ujBz7OhOogEJsz5J85pFSj7y4yeGTNb5dkgJ0xm6Jxx4kKgBsIE8ri6F9r8JFG7Gsfqzd9qpdJCTCyblwYZtb9MxAyV8c36SvmvE5mbvcXZ7LeQ4aaP2qZYg1B4k=').text
+
+
+@app.route('/browser')
+def open_browser():
+    b = botdriver.get_driver()
+    b.get('http://www.baidu.com')
+    return 'OK'
 
 
 def get_wx_api():

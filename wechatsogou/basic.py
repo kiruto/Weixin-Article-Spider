@@ -8,6 +8,7 @@ import re
 from lxml import etree
 from PIL import Image
 
+import botdriver
 import common
 
 try:
@@ -104,47 +105,55 @@ class WechatSogouBasic(WechatSogouBase):
         encoding = requests.utils.get_encodings_from_content(r.text)
         return encoding[0] if encoding else requests.utils.get_encoding_from_headers(r.headers)
 
+    # def _get(self, url, rtype='get', **kwargs):
+    #     """封装request库get,post方法
+    #
+    #     Args:
+    #         url: 请求url
+    #         host: 请求host
+    #         referer: 请求referer
+    #         proxy: 是否启用代理请求
+    #
+    #     Returns:
+    #         text: 请求url的网页内容
+    #
+    #     Raises:
+    #         WechatSogouException: 操作频繁以致出现验证码或requests请求返回码错误
+    #     """
+    #     referer = kwargs.get('referer', None)
+    #     host = kwargs.get('host', None)
+    #     if host or (host == ''):
+    #         del kwargs['host']
+    #     if referer:
+    #         del kwargs['referer']
+    #     headers = {
+    #         "User-Agent": self._agent[random.randint(0, len(self._agent) - 1)],
+    #         "Referer": referer if referer else 'http://weixin.sogou.com/',
+    #         'Host': host if host else 'weixin.sogou.com',
+    #     }
+    #     if rtype == 'get':
+    #         r = self._session.get(url, headers=headers, **kwargs)
+    #     else:
+    #         data = kwargs.get('data', None)
+    #         json = kwargs.get('json', None)
+    #         r = self._session.post(url, data=data, json=json, headers=headers, **kwargs)
+    #     if r.status_code == requests.codes.ok:
+    #         r.encoding = self._get_encoding_from_response(r)
+    #         if u'用户您好，您的访问过于频繁，为确认本次访问为正常用户行为，需要您协助验证' in r.text:
+    #             self._vcode_url = url
+    #             raise WechatSogouVcodeException('weixin.sogou.com verification code')
+    #     else:
+    #         logger.error('requests status_code error', r.status_code)
+    #         raise WechatSogouRequestsException('requests status_code error', r.status_code)
+    #     return r.text
+
     def _get(self, url, rtype='get', **kwargs):
-        """封装request库get,post方法
-
-        Args:
-            url: 请求url
-            host: 请求host
-            referer: 请求referer
-            proxy: 是否启用代理请求
-
-        Returns:
-            text: 请求url的网页内容
-
-        Raises:
-            WechatSogouException: 操作频繁以致出现验证码或requests请求返回码错误
-        """
-        referer = kwargs.get('referer', None)
-        host = kwargs.get('host', None)
-        if host or (host == ''):
-            del kwargs['host']
-        if referer:
-            del kwargs['referer']
-        headers = {
-            "User-Agent": self._agent[random.randint(0, len(self._agent) - 1)],
-            "Referer": referer if referer else 'http://weixin.sogou.com/',
-            'Host': host if host else 'weixin.sogou.com',
-        }
-        if rtype == 'get':
-            r = self._session.get(url, headers=headers, **kwargs)
-        else:
-            data = kwargs.get('data', None)
-            json = kwargs.get('json', None)
-            r = self._session.post(url, data=data, json=json, headers=headers, **kwargs)
-        if r.status_code == requests.codes.ok:
-            r.encoding = self._get_encoding_from_response(r)
-            if u'用户您好，您的访问过于频繁，为确认本次访问为正常用户行为，需要您协助验证' in r.text:
-                self._vcode_url = url
-                raise WechatSogouVcodeException('weixin.sogou.com verification code')
-        else:
-            logger.error('requests status_code error', r.status_code)
-            raise WechatSogouRequestsException('requests status_code error', r.status_code)
-        return r.text
+        driver = botdriver.get_driver()
+        driver.get(url)
+        time.sleep(1)
+        text = self._replace_html(driver.page_source)
+        driver.close()
+        return text
 
     def _jiefeng(self):
         """对于出现验证码，识别验证码，解封

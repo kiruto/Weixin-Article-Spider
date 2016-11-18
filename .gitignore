@@ -3,3 +3,4 @@ ENV/
 cache/
 data/
 **.pyc
+bin/
