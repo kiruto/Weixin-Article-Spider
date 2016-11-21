@@ -150,7 +150,7 @@ class WechatSogouBasic(WechatSogouBase):
     def _get(self, url, rtype='get', **kwargs):
         driver = botdriver.get_driver()
         driver.get(url)
-        time.sleep(1)
+        time.sleep(3)
         text = self._replace_html(driver.page_source)
         if u'用户您好，您的访问过于频繁，为确认本次访问为正常用户行为，需要您协助验证' in text:
             self._vcode_url = driver.current_url
@@ -393,9 +393,14 @@ class WechatSogouBasic(WechatSogouBase):
         Returns:
             msgdict: 最近文章信息字典
         """
-        msglist = re.findall("var msgList = '(.+?)';", text, re.S)[0]
-        msgdict = eval(self._replace_html(msglist))
-        return msgdict
+        msg_list = re.findall("var msgList = '(.+?)'};", text, re.S)
+        if not msg_list:
+            msg_list = re.findall("var msgList = (.+?)};", text, re.S)
+        if not msg_list:
+            raise Exception('got a wrong page')
+        msg_list = msg_list[0] + '}'
+        msg_dict = eval(self._replace_html(msg_list))
+        return msg_dict
 
     def _deal_gzh_article_dict(self, msgdict, **kwargs):
         """解析 公众号 群发消息

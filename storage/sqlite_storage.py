@@ -14,7 +14,6 @@ class SQLiteStorage:
     def __init__(self):
         self._connect = sqlite3.connect(db)
         self._create_table()
-        pass
 
     def subscribe(self, wxid):
         c = self._connect.cursor()
@@ -28,7 +27,7 @@ class SQLiteStorage:
         self._connect.commit()
         c.close()
 
-    def insert_article(self, article):
+    def insert_article(self, article, local_url):
         c = self._connect.cursor()
         m = hashlib.md5()
         m.update(article.title)
@@ -36,7 +35,7 @@ class SQLiteStorage:
         date_time = time.localtime(int(article.datetime))
         date_time = time.strptime(date_time, "%Y-%m-%d")
         extra = json.dumps(article)
-        data = (hash_id, date_time, article.title, "", extra, article.content_url, version)
+        data = (hash_id, date_time, article.title, "", extra, local_url, version)
         c.execute("INSERT INTO article VALUES (?, ?, ?, ?, ?, ?, ?)", data)
         self._connect.commit()
         c.close()
