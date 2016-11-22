@@ -1,7 +1,12 @@
 # -*- coding: utf-8 -*-
 import os
 
+import constants
+
 debug = False
+
+# 取得页面信息的方法
+engine = constants.browser
 
 # 缓存配置
 cache_dir = 'cache'
@@ -58,4 +63,4 @@ log_path = os.path.join(current_path, "data", "log") + os.sep
 phantomjs_path = os.path.join(current_path, "bin", "PhantomJS") + os.sep + "phantomjs"
 chrome_path = os.path.join(current_path, "bin", "chrome") + os.sep + "chromedriver"
 
-browser = "chrome" if debug else "phantomjs"
+browser_platform = constants.chrome if debug else constants.phantomjs

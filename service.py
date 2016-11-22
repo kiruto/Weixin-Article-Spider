@@ -1,13 +1,19 @@
 # -*- coding: utf-8 -*-
+from __future__ import print_function
 import os
+from logging.handlers import RotatingFileHandler
 
 import flask
-from flask import Flask
+from flask import Flask, request, abort
+import logging
 
 import botdriver
-from common.downloader import Downloader
+import common
+from common import download_queue
 import config
+from response_body import get_success_response, get_error_response
 from wechatsogou import WechatSogouApi
+from storage.sqlite_storage import SQLiteStorage
 
 app = Flask(__name__)
 _api = WechatSogouApi()
@@ -20,6 +26,20 @@ if not os.path.exists(config.db_path):
 
 if not os.path.exists(config.log_path):
     os.makedirs(config.log_path)
+
+
+sqlite_helper = SQLiteStorage()
+
+
+@app.before_request
+def reject_head_request():
+    if request.method == 'HEAD':
+        abort()
+
+
+@app.errorhandler(404)
+def page_not_found(e):
+    return get_error_response(e.message), 404
 
 
 @app.route('/')
@@ -61,6 +81,40 @@ def search_message_by_id(account_id):
 
 @app.route('/rest/article/all/<account_id>')
 def list_all_articles_by_id(account_id):
+    return flask.jsonify(_get_articles_by_id(account_id))
+
+
+@app.route('/rest/wxid/add/<wxid>')
+def add_wxid(wxid):
+    try:
+        sqlite_helper.subscribe(wxid)
+        return get_success_response().format()
+    except Exception as e:
+        return get_error_response(e.message).format()
+
+
+@app.route('/save')
+def save_page():
+    subscribes = sqlite_helper.get_wxid_list()
+    print(subscribes)
+    try:
+        info_list = list()
+        for s in subscribes:
+            print("processing wxid=%s" % s['name'])
+            all_articles = _get_articles_by_id(s['name'])
+            for a in all_articles:
+                info_list.append(a)
+            download_queue.resolve(info_list)
+        return get_success_response().format()
+    except Exception as e:
+        return get_error_response(e.message).format()
+
+
+def get_wx_api():
+    return _api
+
+
+def _get_articles_by_id(account_id):
     account_id = account_id.encode('UTF-8')
     api = get_wx_api()
     articles = api.get_gzh_message(wechatid=account_id)
@@ -68,24 +122,15 @@ def list_all_articles_by_id(account_id):
     for a in articles:
         if a['type'] == '49':
             result.append(a)
-    return flask.jsonify(result)
+    return result
 
 
-@app.route('/save')
-def save_page():
-    return Downloader().request('http://mp.weixin.qq.com/s?timestamp=1479366299&src=3&ver=1&signature=Hgvz-IGx2pIJPosLHdR8yqwE8wo1jDbAOGZxFavHFvgo133ujBz7OhOogEJsz5J85pFSj7y4yeGTNb5dkgJ0xm6Jxx4kKgBsIE8ri6F9r8JFG7Gsfqzd9qpdJCTCyblwYZtb9MxAyV8c36SvmvE5mbvcXZ7LeQ4aaP2qZYg1B4k=').text
-
-
-@app.route('/browser')
-def open_browser():
-    b = botdriver.get_driver()
-    b.get('http://www.baidu.com')
-    return 'OK'
-
-
-def get_wx_api():
-    return _api
+def _get_log_path():
+    return config.log_path + common.get_time() + '_flask.log'
 
 
 if __name__ == '__main__':
+    handler = RotatingFileHandler(_get_log_path(), maxBytes=100000, backupCount=1)
+    handler.setLevel(logging.INFO)
+    app.logger.addHandler(handler)
     app.run()
