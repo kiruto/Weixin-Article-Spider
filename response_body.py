@@ -8,15 +8,16 @@ def get_success_response():
     return ResponseBody(1, 'ok')
 
 
-def get_error_response(msg):
-    print(msg)
-    print(traceback.format_exc())
+def get_error_response(msg, should_print=True):
+    if should_print:
+        print(msg)
+        print(traceback.format_exc())
     return ResponseBody(-1, msg)
 
 
 class ResponseBody(dict):
 
-    def __init__(self, flag, msg, **kwargs):
+    def __init__(self, flag=1, msg='ok', **kwargs):
         super(ResponseBody, self).__init__(flag=flag, msg=msg, **kwargs)
 
     def format(self):

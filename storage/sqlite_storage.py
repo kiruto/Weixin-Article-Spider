@@ -69,6 +69,24 @@ class SQLiteStorage:
         else:
             return ArticleRecord(result)
 
+    def get_articles_by_date_created(self, date):
+        c = self._connect.cursor()
+        result = c.execute("SELECT * FROM article WHERE created_at BETWEEN date(?) AND date(?, '+1 day')", [date, date]).fetchall()
+        articles = list()
+        for r in result:
+            articles.append(ArticleRecord(r))
+        c.close()
+        return articles
+
+    def get_articles_by_date_written(self, date):
+        c = self._connect.cursor()
+        result = c.execute("SELECT * FROM article WHERE date_time=?", [date]).fetchall()
+        articles = list()
+        for r in result:
+            articles.append(ArticleRecord(r))
+        c.close()
+        return articles
+
     def close(self):
         self._connect.close()
 

@@ -30,7 +30,7 @@ def _get_encoding_from_response(r):
     return encoding[0] if encoding else requests.utils.get_encoding_from_headers(r.headers)
 
 
-def _save(text, path, file_name):
+def _save_row_to_file(text, path, file_name):
     if not os.path.exists(path):
         os.makedirs(path)
     ff = open(path + file_name, 'w')
@@ -96,16 +96,16 @@ class DownloadedDocument:
         pass
 
     def get_save_path(self):
-        return config.local_storage_path + common.get_time() + os.sep
+        return config.local_storage_path + common.get_time() + os.sep, common.get_time() + os.sep
 
     def get_file_name(self):
         return get_article_id(self.download_info) + ".html"
 
     def write_to_file(self):
-        path = self.get_save_path()
+        path, url = self.get_save_path()
         file_name = self.get_file_name()
-        _save(self.content_text, path, file_name)
-        return path + file_name
+        _save_row_to_file(self.content_text, path, file_name)
+        return url + file_name
 
     def insert_into_db(self):
         db_helper = SQLiteStorage()
