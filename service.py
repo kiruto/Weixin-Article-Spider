@@ -7,8 +7,12 @@ import flask
 from flask import Flask, request, abort
 import logging
 
+from flask import redirect
+from flask import send_from_directory
+
 import common
 import constants
+import web_service
 from common import download_queue
 import config
 from common import sogou_api
@@ -38,12 +42,31 @@ def reject_head_request():
 
 @app.errorhandler(404)
 def page_not_found(e):
-    return get_error_response(e.message, should_print=False).format(), 404
+    return get_error_response('Not found', should_print=False).format(), 404
 
 
 @app.route('/')
-def homepage():
-    return 'HP'
+def hp():
+    return redirect('/s/index.html')
+
+
+# node module dependencies
+@app.route('/node_modules/<path:path>')
+def node_modules(path):
+    return send_from_directory(config.node_modules_path, path)
+
+
+# redirect to homepage
+@app.route('/s/')
+def web_hp_default():
+    return web_hp('index.html')
+
+
+# dist web contents
+@app.route('/s/<path:path>')
+def web_hp(path):
+    path = 'dist/' + path
+    return app.send_static_file(path)
 
 
 @app.route('/rest/name/<account_name>')
@@ -102,6 +125,12 @@ def start():
     return get_success_response().format() if download_queue.start() else get_error_response('spider is running').format()
 
 
+@app.route('/stop')
+def stop():
+    download_queue.stop()
+    return get_success_response().format()
+
+
 @app.route('/rest/progress')
 def progress():
     if download_queue.get_status() == constants.BUSY:
@@ -113,9 +142,13 @@ def progress():
 
 @app.route('/rest/log/<line>')
 def get_log(line):
+    try:
+        line = int(line)
+    except ValueError:
+        return get_error_response('line must be a int number: %s' % line).format()
     if not line:
         line = 0
-    l = download_queue.get_log_from(line)
+    l = download_queue.get_log_from(int(line))
     return ResponseBody(log=l).format()
 
 
@@ -162,6 +195,7 @@ def _get_log_path():
 
 
 if __name__ == '__main__':
+    web_service.pre_start()
     handler = RotatingFileHandler(_get_log_path(), maxBytes=100000, backupCount=1)
     handler.setLevel(logging.DEBUG)
     app.logger.addHandler(handler)

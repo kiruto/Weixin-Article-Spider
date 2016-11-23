@@ -59,6 +59,15 @@ local_storage_path = os.path.join(current_path, "data", "html") + os.sep
 db_path = os.path.join(current_path, "data") + os.sep
 db_file = 'meta.db'
 
+# web资源目录
+web_source_path = os.path.join(current_path, "webapp") + os.sep
+
+# web部署目录
+web_path = os.path.join(current_path, "static", "dist") + os.sep
+
+# node modules
+node_modules_path = os.path.join(current_path, "node_modules") + os.sep
+
 # 日志根目录
 log_path = os.path.join(current_path, "data", "log") + os.sep
 

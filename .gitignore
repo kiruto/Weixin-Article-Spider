@@ -5,3 +5,4 @@ data/
 **.pyc
 **.log
 bin/
+node_modules

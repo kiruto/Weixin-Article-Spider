@@ -74,8 +74,7 @@ class DownloadTask:
         db_helper = SQLiteStorage()
         article_id = get_article_id(self.info)
         if db_helper.get_article(article_id) is not None:
-            print("article %s has already exist." % article_id)
-            return None
+            return None, "article %s has already exist." % article_id
         if not url:
             url = self.info['content_url']
         headers = {
@@ -85,7 +84,7 @@ class DownloadTask:
         }
         result = self._session.get(url, headers=headers, **kwargs)
         result.encoding = _get_encoding_from_response(result)
-        return DownloadedDocument(result, self)
+        return DownloadedDocument(result, self), '%s download success' % url
 
 
 class DownloadedDocument:
@@ -118,7 +117,7 @@ class DownloadedDocument:
     def save(self):
         try:
             self.insert_into_db()
-            return True
+            return True, 'saved'
         except Exception as e:
             print(e.message, traceback.format_exc())
-            return False
+            return False, e.message
