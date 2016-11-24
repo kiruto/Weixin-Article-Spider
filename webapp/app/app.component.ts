@@ -4,7 +4,7 @@ import {Tag} from "./tag.model";
 @Component({
   moduleId: module.id,
   selector: 'my-app',
-  templateUrl: 'main_component.html'
+  templateUrl: 'app.template.html'
 })
 export class AppComponent {
   title = '文章列表';

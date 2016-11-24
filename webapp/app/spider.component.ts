@@ -5,7 +5,7 @@ import {Component, OnInit} from "@angular/core";
 import {ArticleService} from "./article.service";
 @Component({
   selector: 'spider',
-  templateUrl: 'app/spider_component.html',
+  templateUrl: 'app/spider.template.html',
 })
 export class SpiderComponent implements OnInit {
 

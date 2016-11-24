@@ -24,9 +24,15 @@ def valid_date_string(string):
 
 def save_row_to_file(text,
                      path=config.local_storage_raw_file_path,
-                     file_name=time.strftime('%Y-%m-%d %H:%M:%S') + str(time.time()) + '.raw'):
+                     file_name=time.strftime('%Y-%m-%d_%H:%M:%S__') + str(time.time()) + '.raw'):
     if not os.path.exists(path):
         os.makedirs(path)
     ff = open(path + file_name, 'w')
     ff.writelines(text)
     ff.close()
+
+
+def save_page_error_log(text, exception):
+    file_name = time.strftime('%Y-%m-%d_%H:%M:%S__') + str(time.time())
+    save_row_to_file(text, file_name=file_name + '.html')
+    save_row_to_file(exception, file_name=file_name + '.log')

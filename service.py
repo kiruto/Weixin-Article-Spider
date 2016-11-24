@@ -60,14 +60,19 @@ def node_modules(path):
 
 
 # redirect to homepage
-@app.route('/s/')
-def web_hp_default():
-    return web_hp('index.html')
+@app.route('/s/', defaults={'path': None})
+# routing by Angular
+@app.route('/s/articles/<path:path>')
+@app.route('/s/settings/<path:path>')
+@app.route('/s/status/<path:path>')
+@app.route('/s/logs/<path:path>')
+def web_hp_default(path):
+    return web_resource('index.html')
 
 
 # dist web contents
 @app.route('/s/<path:path>')
-def web_hp(path):
+def web_resource(path):
     path = 'dist/' + path
     return app.send_static_file(path)
 

@@ -34,7 +34,7 @@ export class ArticleExtra {
 
 @Component({
   selector: 'article-list',
-  templateUrl: 'app/article_list_component.html'
+  templateUrl: 'app/articles.template.html'
 })
 export class ArticlesComponent implements OnInit {
   articles: Article[];
@@ -46,8 +46,11 @@ export class ArticlesComponent implements OnInit {
   ) {}
   ngOnInit(): void {
     this.route.params
-      .switchMap((params: Params) => this.articleService.getArticlesByCreatedDate(''))
+      .switchMap((params: Params) => {
+        return this.articleService.getArticlesByCreatedDate(params['date'])
+      })
       .subscribe(articles => {
+        console.log(articles);
         this.articles = articles as Article[];
         return null;
       });

@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 
 import logging
+import traceback
+
 import requests
 import random
 import time
@@ -404,10 +406,11 @@ class WechatSogouBasic(WechatSogouBase):
         if not msg_list:
             msg_list = re.findall("var msgList = '(.+?)'};", text, re.S)
         if not msg_list:
-            common.save_row_to_file(text)
+            common.save_page_error_log(text, traceback.format_exc())
             raise Exception('got a wrong page')
         msg_list = msg_list[0] + '}'
-        msg_dict = eval(self._replace_html(msg_list))
+        msg_dict = eval(msg_list)
+        msg_dict = self._replace_all(msg_dict)
         return msg_dict
 
     def _deal_gzh_article_dict(self, msgdict, **kwargs):
