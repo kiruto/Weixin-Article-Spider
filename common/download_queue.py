@@ -6,7 +6,7 @@ from time import sleep
 
 import constants
 from common import sogou_api
-from common.downloadtask import DownloadTask
+from common.download_task import DownloadTask
 from storage.sqlite_storage import SQLiteStorage
 
 delay_time = 3

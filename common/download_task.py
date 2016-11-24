@@ -6,6 +6,7 @@ import random
 import traceback
 
 import requests
+import time
 
 import common
 from common import settings
@@ -28,14 +29,6 @@ def _get_encoding_from_response(r):
     """
     encoding = requests.utils.get_encodings_from_content(r.text)
     return encoding[0] if encoding else requests.utils.get_encoding_from_headers(r.headers)
-
-
-def _save_row_to_file(text, path, file_name):
-    if not os.path.exists(path):
-        os.makedirs(path)
-    ff = open(path + file_name, 'w')
-    ff.writelines(text)
-    ff.close()
 
 
 def get_article_id(info):
@@ -103,7 +96,7 @@ class DownloadedDocument:
     def write_to_file(self):
         path, url = self.get_save_path()
         file_name = self.get_file_name()
-        _save_row_to_file(self.content_text, path, file_name)
+        common.save_row_to_file(self.content_text, path, file_name)
         return url + file_name
 
     def insert_into_db(self):

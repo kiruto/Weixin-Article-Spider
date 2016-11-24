@@ -30,6 +30,9 @@ if not os.path.exists(config.db_path):
 if not os.path.exists(config.log_path):
     os.makedirs(config.log_path)
 
+if not os.path.exists(config.local_storage_raw_file_path):
+    os.makedirs(config.local_storage_raw_file_path)
+
 
 sqlite_helper = SQLiteStorage()
 
@@ -69,6 +72,7 @@ def web_hp(path):
     return app.send_static_file(path)
 
 
+# only for test
 @app.route('/rest/name/<account_name>')
 def search_account_by_name(account_name):
     account_name = account_name.encode('UTF-8')
@@ -77,6 +81,7 @@ def search_account_by_name(account_name):
     return flask.jsonify(result)
 
 
+# only for test
 @app.route('/rest/id/<account_id>')
 def search_account_by_id(account_id):
     account_id = account_id.encode('UTF-8')
@@ -85,6 +90,7 @@ def search_account_by_id(account_id):
     return flask.jsonify(result)
 
 
+# only for test
 @app.route('/rest/article/search/<keywords>')
 def search_article_by_keywords(keywords):
     keywords = keywords.encode('UTF-8')
@@ -93,6 +99,7 @@ def search_article_by_keywords(keywords):
     return flask.jsonify(result)
 
 
+# only for test
 @app.route('/rest/message/<account_id>')
 def search_message_by_id(account_id):
     account_id = account_id.encode('UTF-8')
@@ -101,6 +108,7 @@ def search_message_by_id(account_id):
     return flask.jsonify(result)
 
 
+# only for test
 @app.route('/rest/article/all/<account_id>')
 def list_all_articles_by_id(account_id):
     return flask.jsonify(sogou_api.get_articles_by_id(account_id))

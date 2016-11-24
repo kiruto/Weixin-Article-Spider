@@ -1,0 +1,10 @@
+<ul class="article-list">
+  <li class="article" *ngFor="let a of articles">
+    <a target="_blank">
+      <span class="article-title">{{ a.title }}</span>
+      <span class="article-digest">{{ a.digest }}</span>
+      <span class="article-datetime">{{ a.datetime }}</span>
+      <span class="article-author">{{ a.author }}</span>
+    </a>
+  </li>
+</ul>

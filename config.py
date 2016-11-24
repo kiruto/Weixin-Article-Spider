@@ -54,6 +54,7 @@ current_path = os.path.dirname(__file__) + os.sep
 
 # 数据保存目录
 local_storage_path = os.path.join(current_path, "data", "html") + os.sep
+local_storage_raw_file_path = local_storage_path + 'raw' + os.sep
 
 # 数据库目录
 db_path = os.path.join(current_path, "data") + os.sep

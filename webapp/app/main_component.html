@@ -1,0 +1,8 @@
+<span>{{ name }}</span>
+<ul class="tags">
+  <li *ngFor="let tag of tags"
+      [class.selected]="tag === selected">
+    <a [routerLink]="tag.router" (click)="onSelect(tag)"><span class="tag">{{ tag.name }}</span></a>
+  </li>
+</ul>
+<router-outlet></router-outlet>
