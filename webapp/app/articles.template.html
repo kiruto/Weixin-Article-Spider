@@ -1,10 +1,11 @@
 <ul class="article-list">
   <li class="article" *ngFor="let a of articles">
-    <a target="_blank">
+    <a target="_blank" href="{{ '/cache/html/' + a.content }}">
       <span class="article-title">{{ a.title }}</span>
-      <span class="article-digest">{{ a.digest }}</span>
-      <span class="article-datetime">{{ a.datetime }}</span>
-      <span class="article-author">{{ a.author }}</span>
+      <span class="article-digest">{{ a.extra.digest }}</span>
+      <span class="article-datetime">文章创建:{{ a.date_time }}</span>
+      <span class="article-datetime">文章抓取:{{ a.created_at }}</span>
+      <span class="article-author">{{ a.extra.author }}</span>
     </a>
   </li>
 </ul>

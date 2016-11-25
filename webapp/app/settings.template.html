@@ -1,0 +1,7 @@
+<ul class="setting-wxid">
+  <li *ngFor="let wx of wxidList">
+    <span><a (click)="remove(wx)">[x]</a> {{ wx.name }}</span>
+  </li>
+</ul>
+<textarea class="setting-textarea" [(ngModel)]="inputValue"></textarea>
+<button (click)="addWXID()">添加</button>

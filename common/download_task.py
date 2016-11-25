@@ -96,7 +96,7 @@ class DownloadedDocument:
     def write_to_file(self):
         path, url = self.get_save_path()
         file_name = self.get_file_name()
-        common.save_row_to_file(self.content_text, path, file_name)
+        common.save_raw_to_file(self.content_text, path, file_name)
         return url + file_name
 
     def insert_into_db(self):

@@ -1,0 +1,13 @@
+<ul class="settings">
+  <li *ngFor="let s of tasks">
+    <span (click)="runTask(s)" >{{ s.name }}</span>
+  </li>
+</ul>
+<span class="status-message">状态:{{ status }}</span>
+<span class="progress-message">进度:{{ progress }}</span>
+<span class="system-message">消息:{{ message }}</span>
+<ul class="logs">
+  <li *ngFor="let l of logs">
+    <span>{{ l }}</span>
+  </li>
+</ul>

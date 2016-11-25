@@ -3,7 +3,7 @@ import os
 
 import constants
 
-debug = False
+debug = True
 
 # flask http端口
 http_port = 6303

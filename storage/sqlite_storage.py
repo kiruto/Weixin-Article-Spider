@@ -4,6 +4,7 @@ import json
 import sqlite3
 import time
 
+import common
 from storage import db
 
 version = '1.0'
@@ -26,6 +27,23 @@ class SQLiteStorage:
         c = self._connect.cursor()
         c.execute("DELETE FROM wxid WHERE name=?", [wxid])
         self._connect.commit()
+        c.close()
+
+    def batch_subscribe(self, id_list):
+        c = self._connect.cursor()
+        data = []
+        for i in id_list:
+            i = i.strip()
+            if len(i) == 0:
+                continue
+            p = (i, )
+            data.append(p)
+        try:
+            c.executemany("INSERT OR REPLACE INTO wxid(name) VALUES (?)", data)
+            self._connect.commit()
+        except Exception as e:
+            print(e)
+            common.save_raw_error_log(exception=e)
         c.close()
 
     def edit_extra(self, wxid, extra_dict):
@@ -112,6 +130,10 @@ class WXIDRecord(dict):
 
     def __init__(self, row, **kwargs):
         super(WXIDRecord, self).__init__(name=row[0], extra=row[1], **kwargs)
+        try:
+            self['extra'] = json.loads(self['extra'])
+        except Exception as e:
+            print(e)
 
 
 class ArticleRecord(dict):

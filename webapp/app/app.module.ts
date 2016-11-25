@@ -13,6 +13,7 @@ import {AppRoutingModule} from "./app-routing.module";
 import {SettingsComponent} from "./settings.component";
 import {LogsComponent} from "./logs.component";
 import {StatusComponent} from "./status.component";
+import {TimingRequestService} from "./timing_request.service";
 
 
 @NgModule({
@@ -25,7 +26,7 @@ import {StatusComponent} from "./status.component";
     LogsComponent,
     StatusComponent
   ],
-  providers:    [ ArticleService ],
+  providers:    [ ArticleService, TimingRequestService ],
   bootstrap:    [ AppComponent ]
 })
 export class AppModule { }

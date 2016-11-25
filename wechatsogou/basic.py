@@ -406,7 +406,7 @@ class WechatSogouBasic(WechatSogouBase):
         if not msg_list:
             msg_list = re.findall("var msgList = '(.+?)'};", text, re.S)
         if not msg_list:
-            common.save_page_error_log(text, traceback.format_exc())
+            common.save_raw_error_log(text, traceback.format_exc())
             raise Exception('got a wrong page')
         msg_list = msg_list[0] + '}'
         msg_dict = eval(msg_list)

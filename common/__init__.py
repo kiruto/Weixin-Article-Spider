@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import os
 import time
+import traceback
 from datetime import datetime
 
 import config
@@ -22,7 +23,7 @@ def valid_date_string(string):
         return False
 
 
-def save_row_to_file(text,
+def save_raw_to_file(text,
                      path=config.local_storage_raw_file_path,
                      file_name=time.strftime('%Y-%m-%d_%H:%M:%S__') + str(time.time()) + '.raw'):
     if not os.path.exists(path):
@@ -32,7 +33,12 @@ def save_row_to_file(text,
     ff.close()
 
 
-def save_page_error_log(text, exception):
+def save_raw_error_log(raw_text=None, exception=None):
     file_name = time.strftime('%Y-%m-%d_%H:%M:%S__') + str(time.time())
-    save_row_to_file(text, file_name=file_name + '.html')
-    save_row_to_file(exception, file_name=file_name + '.log')
+    if raw_text:
+        save_raw_to_file(raw_text, file_name=file_name + '.html')
+    if exception:
+        if isinstance(exception, Exception):
+            save_raw_to_file(traceback.format_exc(), file_name=file_name + '.log')
+        else:
+            save_raw_to_file(exception, file_name=file_name + '.log')

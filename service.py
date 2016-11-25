@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import print_function
+
+import json
 import os
 from logging.handlers import RotatingFileHandler
 
@@ -8,6 +10,8 @@ from flask import Flask, request, abort
 import logging
 
 from flask import redirect
+from flask import render_template
+from flask import send_file
 from flask import send_from_directory
 
 import common
@@ -59,12 +63,38 @@ def node_modules(path):
     return send_from_directory(config.node_modules_path, path)
 
 
+@app.route('/log/files/', defaults={'path': None})
+@app.route('/log/files/<path:path>')
+def show_log_files(path):
+    base_dir = config.local_storage_raw_file_path
+    abs_path = base_dir if not path else os.path.join(base_dir, path)
+
+    if not os.path.exists(abs_path):
+        return abort(404)
+
+    if os.path.isfile(abs_path):
+        return send_file(abs_path)
+
+    files = os.listdir(abs_path)
+    return render_template('files.html', files=files)
+
+
+@app.route('/cache/html/<path:path>')
+def get_page(path):
+    return send_from_directory(config.local_storage_path, path)
+
+
 # redirect to homepage
+@app.route('/s', defaults={'path': None})
 @app.route('/s/', defaults={'path': None})
 # routing by Angular
+@app.route('/s/articles', defaults={'path': None})
 @app.route('/s/articles/<path:path>')
+@app.route('/s/settings', defaults={'path': None})
 @app.route('/s/settings/<path:path>')
+@app.route('/s/status', defaults={'path': None})
 @app.route('/s/status/<path:path>')
+@app.route('/s/logs', defaults={'path': None})
 @app.route('/s/logs/<path:path>')
 def web_hp_default(path):
     return web_resource('index.html')
@@ -128,6 +158,24 @@ def add_wxid(wxid):
         return get_error_response(e.message).format()
 
 
+@app.route('/rest/wxid/batch/', methods=['POST'])
+def batch_wxid():
+    data = request.data
+    lst = json.loads(data)
+    if isinstance(lst, list):
+        sqlite_helper.batch_subscribe(lst)
+        return get_success_response().format()
+    else:
+        return get_error_response(data + 'is not a list').format()
+
+
+@app.route('/rest/exid/remove/<wxid>')
+def remove_wxid(wxid):
+    wxid = wxid.strip()
+    sqlite_helper.unsubscribe(wxid)
+    return get_success_response().format()
+
+
 @app.route('/rest/status')
 def get_status():
     return ResponseBody(1, download_queue.get_status()).format()
@@ -181,6 +229,13 @@ def get_articles_by_date_created(date):
     return ResponseBody(articles=articles).format()
 
 
+@app.route('/rest/wxid/list')
+def get_wxid_list():
+    subscribes = sqlite_helper.get_wxid_list()
+    return ResponseBody(wxid_list=subscribes).format()
+
+
+# only for test
 @app.route('/save')
 def save_page():
     subscribes = sqlite_helper.get_wxid_list()
@@ -199,8 +254,7 @@ def save_page():
 
 
 @app.route('/clean')
-def clean_cache_and_db():
-    pass
+def clean_cache_and_db(): pass
 
 
 def _get_log_path():

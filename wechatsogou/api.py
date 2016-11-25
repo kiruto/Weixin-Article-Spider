@@ -1,10 +1,13 @@
 # -*- coding: utf-8 -*-
 
 import re
+import traceback
+
 import requests
 import time
 from lxml import etree
 
+import common
 from .basic import WechatSogouBasic
 from .exceptions import *
 
@@ -36,54 +39,59 @@ class WechatSogouApi(WechatSogouBasic):
             img: 头像图片
             url: 最近文章地址
         """
+
         text = self._search_gzh_text(name, page)
-        page = etree.HTML(text)
-        img = list()
-        info_imgs = page.xpath(u"//div[@class='img-box']/img")
-        for info_img in info_imgs:
-            img.append(info_img.attrib['src'])
-        url = list()
-        info_urls = page.xpath(u"//div[@target='_blank']")
-        for info_url in info_urls:
-            url.append(info_url.attrib['href'])
-        name = list()
-        wechat_id = list()
-        introduction = list()
-        authentication = list()
-        info_instructions = page.xpath(u"//div[@class='txt-box']")
-        for info_instruction in info_instructions:
-            cache = self._get_elem_text(info_instruction)
-            cache = cache.replace('red_beg', '').replace('red_end', '')
-            cache_list = cache.split('\n')
-            cache_re = re.split(u'微信号：|功能介绍：|认证：|最近文章：', cache_list[0])
-            name.append(cache_re[0])
-            wechat_id.append(cache_re[1])
-            for i in range(4 - len(cache_re)):
-                cache_re.append('')
-            if "authnamewrite" in cache_re[2]:
-                introduction.append(re.sub("authnamewrite\('[0-9]'\)", "", cache_re[2]))
-                authentication.append(cache_re[3])
-            else:
-                introduction.append(cache_re[2])
-                authentication.append('')
-        qr_codes = list()
-        info_qrcodes = page.xpath(u"//div[@class='pos-ico']/div/img")
-        for info_qrcode in info_qrcodes:
-            qr_codes.append(info_qrcode.attrib['src'])
-        returns = list()
-        for i in range(len(qr_codes)):
-            returns.append(
-                {
-                    'name': name[i],
-                    'wechat_id': wechat_id[i],
-                    'introduction': introduction[i],
-                    'authentication': authentication[i],
-                    'qr_codes': qr_codes[i],
-                    'img': img[i],
-                    'url': url[i]
-                }
-            )
-        return returns
+        try:
+            page = etree.HTML(text)
+            img = list()
+            info_imgs = page.xpath(u"//div[@class='img-box']/img")
+            for info_img in info_imgs:
+                img.append(info_img.attrib['src'])
+            url = list()
+            info_urls = page.xpath(u"//div[@target='_blank']")
+            for info_url in info_urls:
+                url.append(info_url.attrib['href'])
+            name = list()
+            wechat_id = list()
+            introduction = list()
+            authentication = list()
+            info_instructions = page.xpath(u"//div[@class='txt-box']")
+            for info_instruction in info_instructions:
+                cache = self._get_elem_text(info_instruction)
+                cache = cache.replace('red_beg', '').replace('red_end', '')
+                cache_list = cache.split('\n')
+                cache_re = re.split(u'微信号：|功能介绍：|认证：|最近文章：', cache_list[0])
+                name.append(cache_re[0])
+                wechat_id.append(cache_re[1])
+                for i in range(4 - len(cache_re)):
+                    cache_re.append('')
+                if "authnamewrite" in cache_re[2]:
+                    introduction.append(re.sub("authnamewrite\('[0-9]'\)", "", cache_re[2]))
+                    authentication.append(cache_re[3])
+                else:
+                    introduction.append(cache_re[2])
+                    authentication.append('')
+            qr_codes = list()
+            info_qrcodes = page.xpath(u"//div[@class='pos-ico']/div/img")
+            for info_qrcode in info_qrcodes:
+                qr_codes.append(info_qrcode.attrib['src'])
+            returns = list()
+            for i in range(len(qr_codes)):
+                returns.append(
+                    {
+                        'name': name[i],
+                        'wechat_id': wechat_id[i],
+                        'introduction': introduction[i],
+                        'authentication': authentication[i],
+                        'qr_codes': qr_codes[i],
+                        'img': img[i],
+                        'url': url[i]
+                    }
+                )
+            return returns
+        except Exception:
+            common.save_raw_error_log(text, traceback.format_exc())
+            raise WechatSogouException()
 
     def get_gzh_info(self, wechatid):
         """获取公众号微信号wechatid的信息
