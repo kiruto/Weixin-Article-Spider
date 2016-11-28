@@ -2,9 +2,10 @@
 <html>
   <head>
     <base href="/s/">
-    <title>Article Spider Viewer</title>
+    <title>Weixin Article Spider Viewer</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="material_icons.css" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
 
     <!-- Polyfill(s) for older browsers -->
@@ -15,12 +16,16 @@
     <script src="../node_modules/systemjs/dist/system.src.js"></script>
 
     <script src="systemjs.config.js"></script>
+
+    <link rel="stylesheet" href="../node_modules/material-design-lite/material.min.css">
+
     <script>
       System.import('app').catch(function(err){ console.error(err); });
     </script>
   </head>
 
-  <body>
+  <body class="mdl-demo mdl-color--grey-100 mdl-color-text--grey-700 mdl-base">
     <my-app>Loading...</my-app>
+    <script src="../node_modules/material-design-lite/material.min.js"></script>
   </body>
 </html>

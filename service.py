@@ -13,6 +13,9 @@ from flask import redirect
 from flask import render_template
 from flask import send_file
 from flask import send_from_directory
+from tornado.httpserver import HTTPServer
+from tornado.ioloop import IOLoop
+from tornado.wsgi import WSGIContainer
 
 import common
 import constants
@@ -266,4 +269,7 @@ if __name__ == '__main__':
     handler = RotatingFileHandler(_get_log_path(), maxBytes=100000, backupCount=1)
     handler.setLevel(logging.DEBUG)
     app.logger.addHandler(handler)
-    app.run(port=config.http_port)
+    # app.run(host='0.0.0.0', port=config.http_port)
+    http_server = HTTPServer(WSGIContainer(app))
+    http_server.listen(config.http_port)
+    IOLoop.instance().start()

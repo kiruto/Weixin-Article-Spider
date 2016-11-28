@@ -1,8 +1,27 @@
-<span>{{ name }}</span>
-<ul class="tags">
-  <li *ngFor="let tag of tags"
-      [class.selected]="tag === selected">
-    <a [routerLink]="tag.router" (click)="onSelect(tag)"><span class="tag">{{ tag.name }}</span></a>
-  </li>
-</ul>
-<router-outlet></router-outlet>
+<div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+  <header class="mdl-layout__header mdl-layout__header--scroll mdl-color--primary">
+    <div class="mdl-layout--large-screen-only mdl-layout__header-row">
+    </div>
+    <div class="mdl-layout--large-screen-only mdl-layout__header-row">
+      <h3>{{ name }}</h3>
+    </div>
+    <div class="mdl-layout--large-screen-only mdl-layout__header-row">
+    </div>
+    <div class="mdl-layout__tab-bar mdl-js-ripple-effect mdl-color--primary-dark">
+      <a [routerLink]="tag.router"
+         (click)="onSelect(tag)"
+         *ngFor="let tag of tags"
+         [routerLinkActive]="['is-active']"
+         class="mdl-layout__tab">{{ tag.name }}</a>
+      <button class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored mdl-shadow--4dp mdl-color--accent" id="add">
+        <i class="material-icons" role="presentation">add</i>
+        <span class="visuallyhidden">Add</span>
+      </button>
+    </div>
+  </header>
+  <main class="mdl-layout__content">
+    <div class="mdl-layout__tab-panel is-active" id="overview">
+      <router-outlet></router-outlet>
+    </div>
+  </main>
+</div>

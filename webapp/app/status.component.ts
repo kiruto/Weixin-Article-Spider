@@ -27,7 +27,7 @@ export class StatusComponent implements OnInit, OnDestroy {
   statusTimerHandler: number;
 
   logs: string[] = [];
-  progress: ProgressResponse;
+  progress: number;
   status: string;
 
   message: any = '';
@@ -35,7 +35,10 @@ export class StatusComponent implements OnInit, OnDestroy {
     new Task(0, "运行", () => {
       return this.http.get('/start')
         .toPromise()
-        .then(response => response.json() as OperationResponse)
+        .then(response => {
+          this.logs = [];
+          return response.json() as OperationResponse
+        })
     }),
     new Task(1, "停止", () => {
       return this.http.get('/stop')
@@ -84,13 +87,21 @@ export class StatusComponent implements OnInit, OnDestroy {
 
   getProgress() {
     this.timingRequestService.getProgress().then(response => {
-      this.progress = response;
-      if (!ProgressResponse.isStop(response)) {
-        this.progressTimerHandler = setTimeout(this.getProgress.bind(this), DELAY_TIMEOUT);
-      }
+      this.progress = this.updateProgress(response);
+      this.progressTimerHandler = setTimeout(this.getProgress.bind(this), DELAY_TIMEOUT);
     }).catch(err => {
       this.errorHandler('getProgress', err);
     })
+  }
+
+  updateProgress(response: ProgressResponse): number {
+    console.log(response);
+    if (response.total == 0 && response.progress < 0) return 0;
+    if (response.total == 0 || response.sub_task_total == 0) return 0;
+    let topProgress = response.progress / response.total;
+    let subProgress = response.sub_task_progress / (response.sub_task_total * response.total);
+    console.log(topProgress, subProgress);
+    return topProgress + subProgress;
   }
 
   getStatus() {

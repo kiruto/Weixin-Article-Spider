@@ -1,11 +1,28 @@
-<ul class="article-list">
-  <li class="article" *ngFor="let a of articles">
-    <a target="_blank" href="{{ '/cache/html/' + a.content }}">
-      <span class="article-title">{{ a.title }}</span>
-      <span class="article-digest">{{ a.extra.digest }}</span>
-      <span class="article-datetime">文章创建:{{ a.date_time }}</span>
-      <span class="article-datetime">文章抓取:{{ a.created_at }}</span>
-      <span class="article-author">{{ a.extra.author }}</span>
-    </a>
-  </li>
-</ul>
+<section
+  *ngFor="let a of articles"
+  class="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp">
+  <div class="mdl-card mdl-cell mdl-cell--12-col">
+    <div class="mdl-card__supporting-text">
+      <h4>{{ a.title }}</h4>
+      <p>
+        <span>文章创建:{{ a.date_time }}</span>
+        <span>文章抓取:{{ a.created_at }}</span>
+        <span>{{ a.extra.author }}</span>
+      </p>
+      {{ a.extra.digest }}
+    </div>
+    <div class="mdl-card__actions">
+      <a href="{{ '/cache/html/' + a.content }}" target="_blank" class="mdl-button">阅读全文</a>
+    </div>
+  </div>
+  <!--
+  <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon" id="btn3">
+    <i class="material-icons">more_vert</i>
+  </button>
+  <ul class="mdl-menu mdl-js-menu mdl-menu--bottom-right" for="btn3">
+    <li class="mdl-menu__item">Lorem</li>
+    <li class="mdl-menu__item" disabled>Ipsum</li>
+    <li class="mdl-menu__item">Dolor</li>
+  </ul>
+  -->
+</section>

@@ -47,6 +47,20 @@ class SQLiteStorage:
         c.close()
 
     def edit_extra(self, wxid, extra_dict):
+        """
+
+        :param wxid: string 微信id
+        :type extra_dict: dict
+            name: 公众号名称
+            wechatid: 公众号id
+            jieshao: 介绍
+            renzhen: 认证，为空表示未认证
+            qrcode: 二维码
+            img: 头像图片
+            url: 最近文章地址
+        """
+        if not wxid or not extra_dict:
+            return
         if isinstance(extra_dict, dict):
             extra_dict['version'] = version
             extra = json.dumps(extra_dict)
@@ -130,10 +144,11 @@ class WXIDRecord(dict):
 
     def __init__(self, row, **kwargs):
         super(WXIDRecord, self).__init__(name=row[0], extra=row[1], **kwargs)
-        try:
-            self['extra'] = json.loads(self['extra'])
-        except Exception as e:
-            print(e)
+        if self['extra']:
+            try:
+                self['extra'] = json.loads(self['extra'])
+            except Exception as e:
+                print(e)
 
 
 class ArticleRecord(dict):

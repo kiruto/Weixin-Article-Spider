@@ -16,6 +16,19 @@ _failed_queue = list()
 _thread = None
 
 
+def get_bot_thread():
+    return _thread
+
+
+def log_to_bot_process(flag='info', msg=''):
+    if not _thread:
+        return
+    if flag == 'info':
+        _thread.d(msg)
+    elif flag == 'error':
+        _thread.e(msg)
+
+
 def start():
     status = get_status()
     if status == constants.BUSY:
@@ -122,11 +135,11 @@ class SpiderThread(threading.Thread):
     def run(self):
         self.start_at = time.localtime()
         self._generate_article_list()
-        self._d("task done")
+        self.d("task done")
 
     def stop(self):
         self._stop_event.set()
-        self._d('stopping thread...')
+        self.d('stopping thread...')
 
     def stopped(self):
         return self._stop_event.is_set()
@@ -139,7 +152,7 @@ class SpiderThread(threading.Thread):
             for s in subscribes:
                 if self.stopped():
                     break
-                self._d("processing wxid=%s" % s['name'])
+                self.d("processing wxid=%s" % s['name'])
                 all_articles = sogou_api.get_articles_by_id(s['name'])
                 self.sub_tasks = len(all_articles)
                 for a in all_articles:
@@ -152,12 +165,12 @@ class SpiderThread(threading.Thread):
             print(traceback.format_exc())
             return e
 
-    def _d(self, string):
+    def d(self, string):
         msg = '[i] %s %s' % (_time(), string)
         self.log.append(msg)
         print(msg)
 
-    def _e(self, string):
+    def e(self, string):
         msg = '[e] %s %s' % (_time(), string)
         self.log.append(msg)
         print(msg)
@@ -180,7 +193,6 @@ class SpiderThread(threading.Thread):
             "type": 消息类型(49是文章)
         }
         """
-        self.sub_progress = 0
         if not info_list:
             return
         else:
@@ -192,13 +204,14 @@ class SpiderThread(threading.Thread):
                 response, msg = task.request()
                 self.sub_progress += 1
                 if not response:
-                    self._e(msg)
+                    self.e(msg)
                     continue
                 else:
-                    self._d(msg)
+                    self.d(msg)
                 success, msg = response.save()
                 if not success:
                     _failed_queue.append(info)
-                    self._e(msg)
+                    self.e(msg)
                 else:
-                    self._d(msg)
+                    self.d(msg)
+        self.sub_progress = 0

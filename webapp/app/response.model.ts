@@ -32,5 +32,14 @@ export class WXID {
 }
 
 export class WXIDExtra {
-
+  img: string;
+  jieshao: string;
+  name: string;
+  post_perm: number;
+  qrcode: string;
+  red_count: number;
+  renzhen: string;
+  url: string;
+  version: string;
+  wechatid: string;
 }

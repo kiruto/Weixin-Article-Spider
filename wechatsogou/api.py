@@ -73,9 +73,9 @@ class WechatSogouApi(WechatSogouBasic):
                     'wechatid': wechatid,
                     'post_perm': post_perm,
                     'read_count': read_count,
-                    'qrcode': qrcode[0],
+                    'qrcode': qrcode[0] if qrcode else '',
                     'jieshao': jieshao.replace('red_beg', '').replace('red_end', ''),
-                    'renzhen': renzhen[0]
+                    'renzhen': renzhen[0] if renzhen else ''
                 })
             return relist
         except Exception:
@@ -101,7 +101,16 @@ class WechatSogouApi(WechatSogouBasic):
             url: 最近文章地址
         """
         info = self.search_gzh_info(wechatid, 1)
-        return info[0] if info else False
+        if info:
+            info = info[0]
+            from storage.sqlite_storage import SQLiteStorage
+            from common import download_queue
+            helper = SQLiteStorage()
+            helper.edit_extra(wechatid, info)
+            download_queue.log_to_bot_process(msg='wxid: %s information updated' % wechatid)
+            return info
+        else:
+            return False
 
     def search_article_info(self, name, page=1):
         """搜索文章
