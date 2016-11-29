@@ -79,7 +79,7 @@ class SQLiteStorage:
             result_list.append(WXIDRecord(r))
         return result_list
 
-    def insert_article(self, article, local_url):
+    def insert_article(self, article, local_url, author_name=''):
         c = self._connect.cursor()
         m = hashlib.md5()
         m.update(article['title'])
@@ -87,9 +87,9 @@ class SQLiteStorage:
         date_time = time.localtime(int(article['datetime']))
         date_time = time.strftime("%Y-%m-%d", date_time)
         extra = json.dumps(article)
-        data = (hash_id, date_time, article['title'], "", extra, local_url, version)
-        c.execute(u"""INSERT INTO article(hash_id, date_time, title, info, extra, content, version)
-                  VALUES (?, ?, ?, ?, ?, ?, ?)""", data)
+        data = (hash_id, date_time, article['title'], "", extra, local_url, version, author_name)
+        c.execute(u"""INSERT INTO article(hash_id, date_time, title, info, extra, content, version, author)
+                  VALUES (?, ?, ?, ?, ?, ?, ?, ?)""", data)
         self._connect.commit()
         c.close()
 
@@ -115,6 +115,15 @@ class SQLiteStorage:
     def get_articles_by_date_written(self, date):
         c = self._connect.cursor()
         result = c.execute("SELECT * FROM article WHERE date_time=?", [date]).fetchall()
+        articles = list()
+        for r in result:
+            articles.append(ArticleRecord(r))
+        c.close()
+        return articles
+
+    def get_articles_by_author(self, author):
+        c = self._connect.cursor()
+        result = c.execute("SELECT * FROM article WHERE author=?", [author]).fetchall()
         articles = list()
         for r in result:
             articles.append(ArticleRecord(r))
@@ -158,7 +167,8 @@ class SQLiteStorage:
         info text,
         extra text,
         content text,
-        version text)"""
+        version text,
+        author text)"""
         create_table_wxid = "CREATE TABLE IF NOT EXISTS wxid (name text PRIMARY KEY, extra text)"
         c.execute(create_table_article)
         c.execute(create_table_wxid)
@@ -180,6 +190,11 @@ class WXIDRecord(dict):
 class ArticleRecord(dict):
 
     def __init__(self, row, **kwargs):
+        """
+
+        :param row: 从SELECT * FROM articles中出来的原始结果
+        :param kwargs:
+        """
         super(ArticleRecord, self).__init__(
             hash_id=row[0],
             date_time=row[1],
@@ -189,5 +204,6 @@ class ArticleRecord(dict):
             extra=row[5],
             content=row[6],
             version=row[7],
+            author=row[8],
             **kwargs)
         self['extra'] = json.loads(self['extra'])

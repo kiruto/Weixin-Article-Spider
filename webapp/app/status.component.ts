@@ -98,7 +98,6 @@ export class StatusComponent implements OnInit, OnDestroy {
   }
 
   updateProgress(response: ProgressResponse): number {
-    console.log(response);
     if (response.total == 0 && response.progress < 0) return 0;
     if (response.total == 0 || response.sub_task_total == 0) return 0;
     this.hideProcessBar = ProgressResponse.isStop(response);

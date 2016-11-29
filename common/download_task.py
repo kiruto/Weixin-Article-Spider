@@ -41,9 +41,12 @@ def get_article_id(info):
 
 class DownloadTask:
 
-    def __init__(self, info):
+    def __init__(self, info, subscribe=None):
         """
 
+        :type subscribe: dict {
+            "name": 微信号
+        }
         :type info: {
             "author": 作者,
             "content_url": 下载地址,
@@ -62,6 +65,7 @@ class DownloadTask:
         self._agent = settings.agent
         self._cache = WechatCache(config.cache_dir, 60 * 60)
         self._session = requests.session()
+        self.subscribe = subscribe
 
         self.info = info
 
@@ -103,7 +107,7 @@ class DownloadedDocument:
     def __init__(self, content_text, download_task):
         self.content_text = content_text
         self.download_info = download_task.info
-        pass
+        self.subscribe = download_task.subscribe
 
     def get_save_path(self):
         return config.local_storage_path + common.get_time() + os.sep, common.get_time() + os.sep
@@ -121,7 +125,8 @@ class DownloadedDocument:
         db_helper = SQLiteStorage()
         article_id = get_article_id(self.download_info)
         if db_helper.get_article(article_id) is None:
-            db_helper.insert_article(self.download_info, self.write_to_file())
+            author = '' if not self.subscribe else self.subscribe["name"]
+            db_helper.insert_article(self.download_info, self.write_to_file(), author)
         else:
             print("article %s has already exist." % article_id)
 

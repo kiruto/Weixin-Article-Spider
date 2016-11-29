@@ -232,6 +232,12 @@ def get_articles_by_date_created(date):
     return ResponseBody(articles=articles).format()
 
 
+@app.route('/rest/article/author/<author>')
+def get_articles_by_author(author):
+    articles = sqlite_helper.get_articles_by_author(author)
+    return ResponseBody(articles=articles)
+
+
 @app.route('/rest/date/create_at')
 def get_date_by_created():
     return ResponseBody(date=sqlite_helper.get_date_by_created()).format()

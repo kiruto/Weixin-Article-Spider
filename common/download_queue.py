@@ -157,7 +157,7 @@ class SpiderThread(threading.Thread):
                 self.sub_tasks = len(all_articles)
                 for a in all_articles:
                     info_list.append(a)
-                self.resolve(info_list)
+                self.resolve(info_list, s)
                 self.progress += 1
             return True
         except Exception as e:
@@ -175,9 +175,10 @@ class SpiderThread(threading.Thread):
         self.log.append(msg)
         print(msg)
 
-    def resolve(self, info_list):
+    def resolve(self, info_list, subscribe):
         """
 
+        :param subscribe: subscribe['name']订阅的微信号
         :type info_list: list of dict {
             "author": 作者,
             "content_url": 下载地址,
@@ -199,7 +200,7 @@ class SpiderThread(threading.Thread):
             for info in range(0, len(info_list)):
                 if self.stopped():
                     break
-                task = DownloadTask(info_list.pop(0))
+                task = DownloadTask(info_list.pop(0), subscribe)
                 delay()
                 response, msg = task.request()
                 self.sub_progress += 1
