@@ -3,7 +3,7 @@
  */
 import {Injectable} from "@angular/core";
 import {Http} from "@angular/http";
-import {ProgressResponse, LogsResponse, OperationResponse, WXIDResponse} from "./response.model";
+import {ProgressResponse, LogsResponse, OperationResponse, WXIDResponse, WXIDExtra} from "./response.model";
 @Injectable()
 export class TimingRequestService {
   constructor(private http: Http) {}
@@ -36,7 +36,13 @@ export class TimingRequestService {
     return this.http.get('/rest/wxid/list')
       .toPromise()
       .then(response => {
-        return response.json() as WXIDResponse;
+        let result = response.json() as WXIDResponse;
+        for (let wx of result.wxid_list) {
+          if (!wx.extra) {
+            wx.extra = new WXIDExtra();
+          }
+        }
+        return result;
       })
   }
 

@@ -8,7 +8,9 @@ import traceback
 import requests
 import time
 
+import botdriver
 import common
+import constants
 from common import settings
 from storage.sqlite_storage import SQLiteStorage
 from wechatsogou import WechatCache
@@ -70,6 +72,14 @@ class DownloadTask:
             return None, "article %s has already exist." % article_id
         if not url:
             url = self.info['content_url']
+        result = None
+        if config.engine == constants.request:
+            result = self._get_page_by_request(url=url)
+        elif config.engine == constants.browser:
+            result = self._get_page_by_web_driver(url=url)
+        return DownloadedDocument(result, self), '%s download success' % url
+
+    def _get_page_by_request(self, url=None, host=None, referer=None, **kwargs):
         headers = {
             "User-Agent": self._agent[random.randint(0, len(self._agent) - 1)],
             "Referer": referer if referer else "http://weixin.sogou.com/",
@@ -77,7 +87,15 @@ class DownloadTask:
         }
         result = self._session.get(url, headers=headers, **kwargs)
         result.encoding = _get_encoding_from_response(result)
-        return DownloadedDocument(result, self), '%s download success' % url
+        return result
+
+    def _get_page_by_web_driver(self, url=None, host=None, referer=None, **kwargs):
+        driver = botdriver.get_driver()
+        driver.get(url)
+        time.sleep(3)
+        text = common.replace_html(driver.page_source)
+        driver.close()
+        return text
 
 
 class DownloadedDocument:

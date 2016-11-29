@@ -14,6 +14,7 @@ import {SettingsComponent} from "./settings.component";
 import {LogsComponent} from "./logs.component";
 import {StatusComponent} from "./status.component";
 import {TimingRequestService} from "./timing_request.service";
+import {MDL} from "./mdl.directive";
 
 
 @NgModule({
@@ -24,7 +25,8 @@ import {TimingRequestService} from "./timing_request.service";
     SpiderComponent,
     SettingsComponent,
     LogsComponent,
-    StatusComponent
+    StatusComponent,
+    MDL
   ],
   providers:    [ ArticleService, TimingRequestService ],
   bootstrap:    [ AppComponent ]

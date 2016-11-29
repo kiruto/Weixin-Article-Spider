@@ -1,13 +1,29 @@
-<ul class="settings">
-  <li *ngFor="let s of tasks">
-    <span (click)="runTask(s)" >{{ s.name }}</span>
-  </li>
-</ul>
-<span class="status-message">状态:{{ status }}</span>
-<span class="progress-message">进度:{{ progress }}</span>
-<span class="system-message">消息:{{ message }}</span>
-<ul class="logs">
-  <li *ngFor="let l of logs">
-    <span>{{ l }}</span>
-  </li>
-</ul>
+<section class="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp">
+  <div style="width: 100%">
+    <div *ngFor="let s of tasks"
+         style="padding: 40px; display: table-cell; text-align: center; vertical-align: middle; margin: 0;">
+      <!-- Colored raised button -->
+      <button
+        (click)="runTask(s)"
+        class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored">
+        {{ s.name }}
+      </button>
+    </div>
+  </div>
+  <div style="display: block; margin: 16px">
+    <span class="status-message">状态:{{ status }}</span>
+    <span class="system-message">消息:{{ message }}</span>
+  </div>
+  <!-- MDL Progress Bar with Buffering -->
+  <div [hidden]="hideProcessBar" style="width: 100%">
+    <div id="p3-processor" class="mdl-progress mdl-js-progress" style="width: 100%; margin: 16px 0 0 0"></div>
+  </div>
+</section>
+
+<section class="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp">
+  <ul class="logs">
+    <li *ngFor="let l of logs">
+      <span>{{ l }}</span>
+    </li>
+  </ul>
+</section>

@@ -7,6 +7,7 @@ import {TimingRequestService} from "./timing_request.service";
  */
 
 const DELAY_TIMEOUT = 1000;
+const PROCESSOR_ID = '#p3-processor';
 
 class Task {
   constructor(public id: number,
@@ -28,6 +29,8 @@ export class StatusComponent implements OnInit, OnDestroy {
 
   logs: string[] = [];
   progress: number;
+  //progressbar = document.getElementById(PROCESSOR_ID);
+  hideProcessBar: boolean = false;
   status: string;
 
   message: any = '';
@@ -98,10 +101,18 @@ export class StatusComponent implements OnInit, OnDestroy {
     console.log(response);
     if (response.total == 0 && response.progress < 0) return 0;
     if (response.total == 0 || response.sub_task_total == 0) return 0;
+    this.hideProcessBar = ProgressResponse.isStop(response);
     let topProgress = response.progress / response.total;
+    let topBuffer = (response.progress + 1) / response.total;
+    if (topBuffer > 1) topBuffer = 1;
     let subProgress = response.sub_task_progress / (response.sub_task_total * response.total);
     console.log(topProgress, subProgress);
-    return topProgress + subProgress;
+
+    let result = topProgress + subProgress;
+
+    (document.querySelector(PROCESSOR_ID) as any).MaterialProgress.setProgress(result * 100);
+    (document.querySelector(PROCESSOR_ID) as any).MaterialProgress.setBuffer(topBuffer * 100);
+    return result;
   }
 
   getStatus() {

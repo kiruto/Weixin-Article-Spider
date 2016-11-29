@@ -1,26 +1,27 @@
-<table class="mdl-data-table mdl-js-data-table mdl-shadow--2dp">
-  <thead>
-  <tr>
-    <th class="mdl-data-table__cell--non-numeric">微信号</th>
-    <th class="mdl-data-table__cell--non-numeric">昵称</th>
-    <th class="mdl-data-table__cell--non-numeric">介绍</th>
-    <th class="mdl-data-table__cell--non-numeric">认证</th>
-    <th class="mdl-data-table__cell--non-numeric">操作</th>
-  </tr>
-  </thead>
-  <tbody>
-  <tr *ngFor="let wx of wxidList">
-    <td class="mdl-data-table__cell--non-numeric">{{ wx.name }}</td>
-    <td class="mdl-data-table__cell--non-numeric">{{ wx.extra.name }}</td>
-    <td class="mdl-data-table__cell--non-numeric">{{ wx.extra.jieshao }}</td>
-    <td class="mdl-data-table__cell--non-numeric">{{ wx.extra.renzhen }}</td>
-    <td class="mdl-data-table__cell--non-numeric"><a (click)="remove(wx)">[删除]</a></td>
-  </tr>
-  </tbody>
-</table>
+<section class="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp">
+  <ul class="mdl-list" style="width: 100%; background-color: white">
+    <li class="mdl-list__item mdl-list__item--three-line"
+        *ngFor="let wx of wxidList">
+      <span class="mdl-list__item-primary-content">
+        <i class="material-icons mdl-list__item-avatar">person</i>
+        <span>{{ wx.name }} ({{ wx.extra.name }}) - {{ wx.extra.renzhen }}</span>
+        <span class="mdl-list__item-text-body">
+          {{ wx.extra.jieshao }}
+        </span>
+      </span>
+      <span class="mdl-list__item-secondary-content">
+      <a class="mdl-list__item-secondary-action" (click)="remove(wx)"><i class="material-icons">delete</i></a>
+    </span>
+    </li>
+  </ul>
+</section>
+
 <!-- Floating Multiline Textfield -->
-<div class="mdl-textfield mdl-js-textfield">
-  <textarea class="mdl-textfield__input" type="text" rows= "5" [(ngModel)]="inputValue" ></textarea>
-  <label class="mdl-textfield__label" for="sample5">批量订阅微信号(一行一个)</label>
+<div style="padding-left: 30%; padding-right: 30%">
+  <div class="mdl-textfield mdl-js-textfield" style="display: block; width: 100%">
+    <textarea class="mdl-textfield__input" type="text" rows= "5" [(ngModel)]="inputValue" ></textarea>
+    <label class="mdl-textfield__label" for="sample5">批量订阅微信号(一行一个)</label>
+  </div>
+  <button (click)="addWXID()"
+          class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent">添加</button>
 </div>
-<button (click)="addWXID()">添加</button>

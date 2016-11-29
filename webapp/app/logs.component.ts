@@ -8,7 +8,7 @@ import Timer = NodeJS.Timer;
   moduleId: module.id,
   templateUrl: 'logs.template.html'
 })
-export class LogsComponent {
+export class  LogsComponent {
   constructor(private http: Http) {}
 
 }

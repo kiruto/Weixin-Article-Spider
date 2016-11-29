@@ -7,11 +7,11 @@ import {Tag} from "./tag.model";
   templateUrl: 'app.template.html'
 })
 export class AppComponent {
-  title = '文章列表';
+  title = 'Weixin Spider Article Viewer';
   tags = [
     new Tag('文章列表', 'articles'),
-    new Tag('设置', 'settings'),
-    new Tag('日志', 'logs'),
+    new Tag('订阅公众号', 'settings'),
+    new Tag('更新日志', 'logs'),
     new Tag('状态', 'status')
   ];
   selected = this.tags[0];
