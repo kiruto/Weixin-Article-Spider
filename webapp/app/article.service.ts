@@ -13,8 +13,6 @@ export class ArticleService {
     return this.http.get('/rest/article/date/create_at/' + date)
       .toPromise()
       .then(response => {
-        console.log(response);
-        console.log(response.json());
         return response.json().articles as Article[]
       })
       .catch(onError)
@@ -23,10 +21,23 @@ export class ArticleService {
     date = ArticleService.validDate(date);
     return this.http.get('/rest/article/date/written/' + date)
       .toPromise().then(response => {
-        console.log(response);
-        return response.json();
+        return response.json().articles as Article[];
       })
       .catch(onError);
+  }
+
+  getCreatedDate(): Promise<string[]> {
+    return this.http.get('/rest/date/create_at').toPromise().then(response => {
+      let result = response.json();
+      return result.date as string[];
+    })
+  }
+
+  getWrittenDate(): Promise<string[]> {
+    return this.http.get('/rest/date/written').toPromise().then(response => {
+      let result = response.json();
+      return result.date as string[];
+    })
   }
 
   private static validDate(date: String) {

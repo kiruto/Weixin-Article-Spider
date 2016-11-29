@@ -39,20 +39,36 @@ export class ArticleExtra {
 export class ArticlesComponent implements OnInit {
   articles: Article[];
   selected_article: Article;
+  create_at: string[] = [];
+  written: string[] = [];
   constructor(
     @Inject(ArticleService) private articleService: ArticleService,
     @Inject(ActivatedRoute) private route: ActivatedRoute,
     @Inject(Location) private location: Location
   ) {}
   ngOnInit(): void {
+    //console.log(this.location.path());
+    let path = this.location.path();
     this.route.params
       .switchMap((params: Params) => {
-        return this.articleService.getArticlesByCreatedDate(params['date'])
+        if (path.includes('created_at'))
+          return this.articleService.getArticlesByCreatedDate(params['date']);
+        else if (path.includes('written'))
+          return this.articleService.getArticlesByWrittenDate(params['date']);
       })
       .subscribe(articles => {
-        console.log(articles);
         this.articles = articles as Article[];
         return null;
       });
+    this.articleService.getCreatedDate().then(date => {
+      this.create_at = date;
+    }).catch(err => {
+      console.log(err)
+    });
+    this.articleService.getWrittenDate().then(date => {
+      this.written = date;
+    }).catch(err => {
+      console.log(err);
+    })
   }
 }

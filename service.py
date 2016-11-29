@@ -232,6 +232,16 @@ def get_articles_by_date_created(date):
     return ResponseBody(articles=articles).format()
 
 
+@app.route('/rest/date/create_at')
+def get_date_by_created():
+    return ResponseBody(date=sqlite_helper.get_date_by_created()).format()
+
+
+@app.route('/rest/date/written')
+def get_date_by_written():
+    return ResponseBody(date=sqlite_helper.get_date_by_written()).format()
+
+
 @app.route('/rest/wxid/list')
 def get_wxid_list():
     subscribes = sqlite_helper.get_wxid_list()

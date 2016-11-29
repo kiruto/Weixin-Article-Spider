@@ -3,6 +3,7 @@ import hashlib
 import json
 import sqlite3
 import time
+import datetime
 
 import common
 from storage import db
@@ -103,7 +104,8 @@ class SQLiteStorage:
 
     def get_articles_by_date_created(self, date):
         c = self._connect.cursor()
-        result = c.execute("SELECT * FROM article WHERE created_at BETWEEN date(?) AND date(?, '+1 day')", [date, date]).fetchall()
+        result = c.execute("SELECT * FROM article"
+                           " WHERE created_at BETWEEN date(?) AND date(?, '+1 day')", [date, date]).fetchall()
         articles = list()
         for r in result:
             articles.append(ArticleRecord(r))
@@ -118,6 +120,30 @@ class SQLiteStorage:
             articles.append(ArticleRecord(r))
         c.close()
         return articles
+
+    def get_date_by_created(self):
+        d = datetime.datetime.now()
+        offset = datetime.timedelta(days=7)
+        day = d - offset
+        date_from = datetime.datetime(day.year, day.month, day.day, 0, 0, 0)
+        date = str(date_from)
+        c = self._connect.cursor()
+        result = c.execute("SELECT strftime('%Y-%m-%d', created_at) FROM article"
+                           " WHERE datetime(created_at)>=datetime(?)"
+                           " GROUP BY strftime('%Y-%m-%d', created_at)", [date]).fetchall()
+        return result
+
+    def get_date_by_written(self):
+        d = datetime.datetime.now()
+        offset = datetime.timedelta(days=7)
+        day = d - offset
+        date_from = datetime.datetime(day.year, day.month, day.day, 0, 0, 0)
+        date = str(date_from)
+        c = self._connect.cursor()
+        result = c.execute("SELECT strftime('%Y-%m-%d', date_time) FROM article"
+                           " WHERE datetime(date_time)>=datetime(?)"
+                           " GROUP BY strftime('%Y-%m-%d', date_time)", [date]).fetchall()
+        return result
 
     def close(self):
         self._connect.close()

@@ -26,3 +26,25 @@
   </ul>
   -->
 </section>
+
+<div style="
+    position: fixed;
+    display: block;
+    right: 0;
+    bottom: 0;
+    margin-right: 40px;
+    margin-bottom: 40px;
+    z-index: 900;">
+  <span>抓取日期</span>
+  <ul>
+    <li *ngFor="let d of create_at">
+      <a [routerLink]="'/articles/created_at/' + d">{{ d }}</a>
+    </li>
+  </ul>
+  <span>文章日期</span>
+  <ul>
+    <li *ngFor="let d of written">
+      <a [routerLink]="'/articles/written/' + d">{{ d }}</a>
+    </li>
+  </ul>
+</div>
