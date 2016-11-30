@@ -3,12 +3,18 @@ from __future__ import print_function
 
 import json
 import os
+import urllib
+import urlparse
 from logging.handlers import RotatingFileHandler
 
 import flask
+import time
+
+import requests
 from flask import Flask, request, abort
 import logging
 
+from flask import make_response
 from flask import redirect
 from flask import render_template
 from flask import send_file
@@ -100,6 +106,8 @@ def get_page(path):
 @app.route('/s/status/<path:path>')
 @app.route('/s/logs', defaults={'path': None})
 @app.route('/s/logs/<path:path>')
+@app.route('/s/proxy/', defaults={'path': None})
+@app.route('/s/proxy/<path:path>')
 def web_hp_default(path):
     return web_resource('index.html')
 
@@ -263,14 +271,6 @@ def get_vcode_status():
     ).format()
 
 
-@app.route('/vcode/img')
-def get_vcode_img():
-    if vcode.vcode_type == vcode.VCODE_FROM_ARTICLE_LIST:
-        return app.send_static_file(config.cache_path + 'article_list_vcode.png')
-    else:
-        return get_error_response('no vcode image found').format()
-
-
 @app.route('/rest/vode/resolve', methods=['POST'])
 def resolve_vcode():
     data = request.data
@@ -280,6 +280,31 @@ def resolve_vcode():
             vcode.resolve_vcode(dct['vcode'])
             return get_success_response()
     return get_error_response('post a wrong data')
+
+
+@app.route('/proxy/image/<path:url_encoded>')
+def proxy_image(url_encoded):
+    url = urllib.unquote(url_encoded).decode('utf8')
+    host = url.split("//")[-1].split("/")[0]
+    headers = {
+        'Accept': 'image/webp,image/*,*/*;q=0.8',
+        'Host': host,
+        'Referer': 'http://mp.weixin.qq.com/s?src=3&timestamp='
+                   + str(int(time.time()))
+                   + '&ver=1&signature=Y8xP5HzuKfjhSPsycyiy*m9ySzU1OQ0pbc0TkOdpQfRyjPLIVtloAAixb2C3s'
+                     'fLdTJ7g-QzBX*tQN6tdMxEYkozcYimHAinkncfvFVB3KMmQnUX1A--C-pwfyIHSDWaax279QqOwZO*'
+                     '*cpZvLg*nYFo27AYt5duA4f4JdlVpMsc='
+    }
+    resp = requests.get(url, headers=headers, stream=True)
+    return resp.raw.read(), resp.status_code, resp.headers.items()
+
+
+@app.route('/vcode/img')
+def get_vcode_img():
+    if vcode.vcode_type == vcode.VCODE_FROM_ARTICLE_LIST:
+        return app.send_static_file(config.cache_path + 'article_list_vcode.png')
+    else:
+        return get_error_response('no vcode image found').format()
 
 
 # only for test

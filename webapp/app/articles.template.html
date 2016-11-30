@@ -12,7 +12,7 @@
       {{ a.extra.digest }}
     </div>
     <div class="mdl-card__actions">
-      <a href="{{ '/cache/html/' + a.content }}" target="_blank" class="mdl-button">阅读全文</a>
+      <a (click)="viewArticle(a)" class="mdl-button">阅读全文</a>
     </div>
   </div>
   <!--

@@ -4,6 +4,7 @@ import {NgModule} from "@angular/core";
 import {StatusComponent} from "./status.component";
 import {SettingsComponent} from "./settings.component";
 import {LogsComponent} from "./logs.component";
+import {IFrameComponent} from "./iframe.component";
 /**
  * Created by yuriel on 11/23/16.
  */
@@ -17,7 +18,8 @@ const routes: Routes = [
   { path: 'articles/author/:author', component: ArticlesComponent },
   { path: 'settings', component: SettingsComponent },
   { path: 'logs', component: LogsComponent },
-  { path: 'status', component: StatusComponent }
+  { path: 'status', component: StatusComponent },
+  { path: 'proxy/:url_encoded', component: IFrameComponent }
 ];
 
 @NgModule({

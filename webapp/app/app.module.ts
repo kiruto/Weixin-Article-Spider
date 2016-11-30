@@ -17,6 +17,8 @@ import {TimingRequestService} from "./timing_request.service";
 import {MDL} from "./mdl.directive";
 import {VCodeService} from "./vcode.service";
 import {VCodeDialogComponent} from "./vcode_dialog.component";
+import {IFrameComponent} from "./iframe.component";
+import {ProxyService} from "./proxy.service";
 
 
 @NgModule({
@@ -29,6 +31,7 @@ import {VCodeDialogComponent} from "./vcode_dialog.component";
     LogsComponent,
     StatusComponent,
     VCodeDialogComponent,
+    IFrameComponent,
     MDL
   ],
   providers:    [ ArticleService, TimingRequestService, VCodeService ],

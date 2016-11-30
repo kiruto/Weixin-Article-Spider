@@ -4,13 +4,13 @@
         *ngFor="let wx of wxidList">
       <span class="mdl-list__item-primary-content">
         <i class="material-icons mdl-list__item-avatar">person</i>
-        <a [routerLink]="'/articles/author/' + wx.name">
-          <span style="max-width: 100px;
-                       display: block;
-                       white-space: nowrap;">
-            {{ wx.name }} ({{ wx.extra.name }}) - {{ wx.extra.renzhen }}
-          </span>
-        </a>
+        <span style="max-width: 100px;
+                     display: block;
+                     white-space: nowrap;">
+          <a [routerLink]="'/articles/author/' + wx.name">
+            {{ wx.name }}
+          </a> ({{ wx.extra.name }}) - {{ wx.extra.renzhen }}
+        </span>
         <span class="mdl-list__item-text-body">
           {{ wx.extra.jieshao }}
         </span>
@@ -20,14 +20,15 @@
     </span>
     </li>
   </ul>
-</section>
 
-<!-- Floating Multiline Textfield -->
-<div style="padding-left: 30%; padding-right: 30%">
-  <div class="mdl-textfield mdl-js-textfield" style="display: block; width: 100%">
-    <textarea class="mdl-textfield__input" type="text" rows= "5" [(ngModel)]="inputValue" ></textarea>
-    <label class="mdl-textfield__label" for="sample5">批量订阅微信号(一行一个)</label>
+
+  <!-- Floating Multiline Textfield -->
+  <div style="padding: 20px; width: 100%;">
+    <div class="mdl-textfield mdl-js-textfield" style="display: block; width: 100%">
+      <textarea class="mdl-textfield__input" type="text" rows= "5" [(ngModel)]="inputValue" ></textarea>
+      <label class="mdl-textfield__label" for="sample5">批量订阅微信号(一行一个)</label>
+    </div>
+    <button (click)="addWXID()"
+            class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent">添加</button>
   </div>
-  <button (click)="addWXID()"
-          class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent">添加</button>
-</div>
+</section>

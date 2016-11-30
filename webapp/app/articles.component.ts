@@ -3,7 +3,7 @@
  */
 import {Component, OnInit, Inject} from "@angular/core";
 import {ArticleService} from "./article.service";
-import {ActivatedRoute, Params} from "@angular/router";
+import {ActivatedRoute, Params, Router} from "@angular/router";
 import { Location } from '@angular/common';
 
 export class Article {
@@ -11,7 +11,7 @@ export class Article {
   title: String;
   info: String;
   version: String;
-  content: String;
+  content: string;
   created_at: String;
   date_time: String;
   extra: ArticleExtra;
@@ -41,11 +41,14 @@ export class ArticlesComponent implements OnInit {
   selected_article: Article;
   create_at: string[] = [];
   written: string[] = [];
+
   constructor(
+    private router: Router,
     @Inject(ArticleService) private articleService: ArticleService,
     @Inject(ActivatedRoute) private route: ActivatedRoute,
     @Inject(Location) private location: Location
   ) {}
+
   ngOnInit(): void {
     //console.log(this.location.path());
     let path = this.location.path();
@@ -72,5 +75,14 @@ export class ArticlesComponent implements OnInit {
     }).catch(err => {
       console.log(err);
     })
+  }
+
+  viewArticle(article: Article) {
+    this.router.navigate(['proxy/', this.getProxyUrlByPath(article.content)]);
+  }
+
+  getProxyUrlByPath(path: string) {
+    let encode_url = encodeURIComponent('/cache/html/' + path);
+    return encode_url;
   }
 }
