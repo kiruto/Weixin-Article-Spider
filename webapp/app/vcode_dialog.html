@@ -1,0 +1,10 @@
+<dialog class="mdl-dialog" id="vcode_dialog">
+  <h4 class="mdl-dialog__title">请输入验证码</h4>
+  <div class="mdl-dialog__content">
+    <img [src]="vcodeImgSrc"/>
+    <input [(ngModel)]="inputValue" />
+  </div>
+  <div class="mdl-dialog__actions">
+    <button type="button" class="mdl-button" (click)="submit()">确定</button>
+  </div>
+</dialog>

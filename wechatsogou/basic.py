@@ -67,6 +67,7 @@ class WechatSogouBasic(WechatSogouBase):
     """
 
     def __init__(self, **kwargs):
+        self._vcode_url = None
         self._cache = WechatCache(config.cache_dir, 60 * 60)
         self._session = self._cache.get(config.cache_session_name) if self._cache.get(
             config.cache_session_name) else requests.session()
@@ -142,9 +143,8 @@ class WechatSogouBasic(WechatSogouBase):
             r = self._session.post(url, data=data, json=json, headers=headers, **kwargs)
         if r.status_code == requests.codes.ok:
             r.encoding = self._get_encoding_from_response(r)
-            if u'用户您好，您的访问过于频繁，为确认本次访问为正常用户行为，需要您协助验证' in r.text:
-                self._vcode_url = url
-                raise WechatSogouVcodeException('weixin.sogou.com verification code')
+            if self._check_vcode(r.text)[0]:
+                self._raise_vcode_exception(url)
         else:
             logger.error('requests status_code error', r.status_code)
             raise WechatSogouRequestsException('requests status_code error', r.status_code)
@@ -153,13 +153,48 @@ class WechatSogouBasic(WechatSogouBase):
     def _get_page_by_browser(self, url):
         driver = botdriver.get_driver()
         driver.get(url)
+        driver.implicitly_wait(60)
         time.sleep(3)
         text = self._replace_html(driver.page_source)
-        if u'用户您好，您的访问过于频繁，为确认本次访问为正常用户行为，需要您协助验证' in text:
-            self._vcode_url = driver.current_url
-            raise WechatSogouVcodeException('weixin.sogou.com verification code')
+        while not self.solve_vcode(driver, text):
+            pass
         driver.close()
         return text
+
+    def solve_vcode(self, driver, response_text):
+        """
+
+        :param driver:
+        :param response_text:
+        :return: 是否已解决验证码问题
+        """
+        check_vcode, vcode_type = self._check_vcode(response_text)
+        if vcode_type == 2:
+            # try to solve vcode
+            from common import vcode
+            vcode.create_session(driver)
+            for i in range(60):
+                time.sleep(1)
+                if vcode.solved:
+                    break
+            vcode.close_session()
+        return not check_vcode
+
+    def _check_vcode(self, response_text):
+        """
+
+        :param response_text:
+        :return: 是否需要输入验证码
+        """
+        if u'用户您好，您的访问过于频繁，为确认本次访问为正常用户行为，需要您协助验证' in response_text:
+            return True, 1
+        if u'为了您的安全请输入验证码' in response_text:
+            return True, 2
+        return False, 0
+
+    def _raise_vcode_exception(self, url):
+        self._vcode_url = url
+        raise WechatSogouVcodeException('weixin.sogou.com verification code')
 
     def _get(self, url, rtype='get', **kwargs):
         if config.engine == constants.request:

@@ -52,6 +52,9 @@ agent = (
 # 当前目录
 current_path = os.path.dirname(__file__) + os.sep
 
+# cache
+cache_path = os.path.join(current_path, "cache") + os.sep
+
 # 数据保存目录
 local_storage_path = os.path.join(current_path, "data", "html") + os.sep
 local_storage_raw_file_path = local_storage_path + 'raw' + os.sep

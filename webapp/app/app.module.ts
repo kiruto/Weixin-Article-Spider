@@ -15,6 +15,8 @@ import {LogsComponent} from "./logs.component";
 import {StatusComponent} from "./status.component";
 import {TimingRequestService} from "./timing_request.service";
 import {MDL} from "./mdl.directive";
+import {VCodeService} from "./vcode.service";
+import {VCodeDialogComponent} from "./vcode_dialog.component";
 
 
 @NgModule({
@@ -26,9 +28,10 @@ import {MDL} from "./mdl.directive";
     SettingsComponent,
     LogsComponent,
     StatusComponent,
+    VCodeDialogComponent,
     MDL
   ],
-  providers:    [ ArticleService, TimingRequestService ],
+  providers:    [ ArticleService, TimingRequestService, VCodeService ],
   bootstrap:    [ AppComponent ]
 })
 export class AppModule { }

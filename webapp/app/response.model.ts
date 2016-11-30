@@ -43,3 +43,8 @@ export class WXIDExtra {
   version: string;
   wechatid: string;
 }
+
+export class VcodeResponse extends OperationResponse {
+  need_input: boolean;
+  type: string;
+}

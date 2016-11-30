@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {Tag} from "./tag.model";
+import {VCodeService} from "./vcode.service";
 
 @Component({
   moduleId: module.id,

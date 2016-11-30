@@ -41,6 +41,15 @@ def get_article_id(info):
 
 class DownloadTask:
 
+    # 使用request
+    _engine = constants.request
+
+    # 使用js引擎
+    # _engine = constants.browser
+
+    # 使用默认
+    # _engine = config.engine
+
     def __init__(self, info, subscribe=None):
         """
 
@@ -77,9 +86,9 @@ class DownloadTask:
         if not url:
             url = self.info['content_url']
         result = None
-        if config.engine == constants.request:
+        if self._engine == constants.request:
             result = self._get_page_by_request(url=url)
-        elif config.engine == constants.browser:
+        elif self._engine == constants.browser:
             result = self._get_page_by_web_driver(url=url)
         return DownloadedDocument(result, self), '%s download success' % url
 
@@ -96,6 +105,7 @@ class DownloadTask:
     def _get_page_by_web_driver(self, url=None, host=None, referer=None, **kwargs):
         driver = botdriver.get_driver()
         driver.get(url)
+        driver.implicitly_wait(60)
         time.sleep(3)
         text = common.replace_html(driver.page_source)
         driver.close()

@@ -23,6 +23,7 @@ import web_service
 from common import download_queue
 import config
 from common import sogou_api
+from common import vcode
 from response_body import get_success_response, get_error_response, ResponseBody
 from storage.sqlite_storage import SQLiteStorage
 
@@ -235,7 +236,7 @@ def get_articles_by_date_created(date):
 @app.route('/rest/article/author/<author>')
 def get_articles_by_author(author):
     articles = sqlite_helper.get_articles_by_author(author)
-    return ResponseBody(articles=articles)
+    return ResponseBody(articles=articles).format()
 
 
 @app.route('/rest/date/create_at')
@@ -252,6 +253,33 @@ def get_date_by_written():
 def get_wxid_list():
     subscribes = sqlite_helper.get_wxid_list()
     return ResponseBody(wxid_list=subscribes).format()
+
+
+@app.route('/rest/vcode/status')
+def get_vcode_status():
+    return ResponseBody(
+        need_input=False if not vcode.temp_driver else True,
+        type=vcode.vcode_type
+    ).format()
+
+
+@app.route('/vcode/img')
+def get_vcode_img():
+    if vcode.vcode_type == vcode.VCODE_FROM_ARTICLE_LIST:
+        return app.send_static_file(config.cache_path + 'article_list_vcode.png')
+    else:
+        return get_error_response('no vcode image found').format()
+
+
+@app.route('/rest/vode/resolve', methods=['POST'])
+def resolve_vcode():
+    data = request.data
+    dct = json.loads(data)
+    if isinstance(dct, dict):
+        if dct['type'] == vcode.vcode_type:
+            vcode.resolve_vcode(dct['vcode'])
+            return get_success_response()
+    return get_error_response('post a wrong data')
 
 
 # only for test
@@ -285,7 +313,6 @@ if __name__ == '__main__':
     handler = RotatingFileHandler(_get_log_path(), maxBytes=100000, backupCount=1)
     handler.setLevel(logging.DEBUG)
     app.logger.addHandler(handler)
-    # app.run(host='0.0.0.0', port=config.http_port)
     http_server = HTTPServer(WSGIContainer(app))
     http_server.listen(config.http_port)
     IOLoop.instance().start()

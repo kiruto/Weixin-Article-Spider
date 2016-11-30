@@ -3,7 +3,10 @@
  */
 import {Injectable} from "@angular/core";
 import {Http} from "@angular/http";
-import {ProgressResponse, LogsResponse, OperationResponse, WXIDResponse, WXIDExtra} from "./response.model";
+import {
+  ProgressResponse, LogsResponse, OperationResponse, WXIDResponse, WXIDExtra,
+  VcodeResponse
+} from "./response.model";
 @Injectable()
 export class TimingRequestService {
   constructor(private http: Http) {}
