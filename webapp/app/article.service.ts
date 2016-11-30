@@ -26,6 +26,15 @@ export class ArticleService {
       .catch(onError);
   }
 
+  getArticlesByAuthor(author: string): Promise<Article[]> {
+    author = author.trim();
+    return this.http.get('/rest/article/author/' + author)
+      .toPromise()
+      .then(response => {
+        return response.json().articles as Article[];
+      })
+  }
+
   getCreatedDate(): Promise<string[]> {
     return this.http.get('/rest/date/create_at').toPromise().then(response => {
       let result = response.json();

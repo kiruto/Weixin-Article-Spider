@@ -14,6 +14,7 @@ const routes: Routes = [
   { path: 'articles', redirectTo: 'articles/created_at/' + todayString, pathMatch: 'full'},
   { path: 'articles/created_at/:date', component: ArticlesComponent },
   { path: 'articles/written/:date', component: ArticlesComponent },
+  { path: 'articles/author/:author', component: ArticlesComponent },
   { path: 'settings', component: SettingsComponent },
   { path: 'logs', component: LogsComponent },
   { path: 'status', component: StatusComponent }

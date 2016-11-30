@@ -4,7 +4,13 @@
         *ngFor="let wx of wxidList">
       <span class="mdl-list__item-primary-content">
         <i class="material-icons mdl-list__item-avatar">person</i>
-        <span style="white-space: nowrap ;">{{ wx.name }} ({{ wx.extra.name }}) - {{ wx.extra.renzhen }}</span>
+        <a [routerLink]="'/articles/author/' + wx.name">
+          <span style="max-width: 100px;
+                       display: block;
+                       white-space: nowrap;">
+            {{ wx.name }} ({{ wx.extra.name }}) - {{ wx.extra.renzhen }}
+          </span>
+        </a>
         <span class="mdl-list__item-text-body">
           {{ wx.extra.jieshao }}
         </span>

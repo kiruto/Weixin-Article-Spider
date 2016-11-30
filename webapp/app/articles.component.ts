@@ -55,6 +55,8 @@ export class ArticlesComponent implements OnInit {
           return this.articleService.getArticlesByCreatedDate(params['date']);
         else if (path.includes('written'))
           return this.articleService.getArticlesByWrittenDate(params['date']);
+        else if (path.includes('author'))
+          return this.articleService.getArticlesByAuthor(params['author'])
       })
       .subscribe(articles => {
         this.articles = articles as Article[];
