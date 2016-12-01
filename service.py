@@ -67,6 +67,38 @@ def hp():
     return redirect('/s/index.html')
 
 
+def homepage_redirecting(*args):
+
+    """
+    :type args: list of str 所有要被重定向到首页的routing path
+    """
+
+    class RouteFunction:
+        def __init__(self, function):
+            self.fun = function
+            self.__name__ = 'route_function%i' % id(self)
+
+        def __call__(self, **kwargs):
+            return self.fun(**kwargs)
+
+    def decorator(fun):
+        for path_string in args:
+            defaults = None if ('<path:path>' in path_string) else {'path': None}
+            app.route(path_string, defaults=defaults)(RouteFunction(fun))
+        return
+    return decorator
+
+
+@homepage_redirecting('/s', '/s/',
+                      '/s/articles', '/s/articles/', '/s/articles/<path:path>',
+                      '/s/settings', '/s/settings/', '/s/settings/<path:path>',
+                      '/s/status', '/s/status/', '/s/status/<path:path>',
+                      '/s/logs', '/s/logs/', '/s/logs/<path:path>',
+                      '/s/proxy', '/s/proxy/', '/s/proxy/<path:path>')
+def web_hp_default(path):
+    return web_resource('index.html')
+
+
 # node module dependencies
 @app.route('/node_modules/<path:path>')
 def node_modules(path):
@@ -92,24 +124,6 @@ def show_log_files(path):
 @app.route('/cache/html/<path:path>')
 def get_page(path):
     return send_from_directory(config.local_storage_path, path)
-
-
-# redirect to homepage
-@app.route('/s', defaults={'path': None})
-@app.route('/s/', defaults={'path': None})
-# routing by Angular
-@app.route('/s/articles', defaults={'path': None})
-@app.route('/s/articles/<path:path>')
-@app.route('/s/settings', defaults={'path': None})
-@app.route('/s/settings/<path:path>')
-@app.route('/s/status', defaults={'path': None})
-@app.route('/s/status/<path:path>')
-@app.route('/s/logs', defaults={'path': None})
-@app.route('/s/logs/<path:path>')
-@app.route('/s/proxy/', defaults={'path': None})
-@app.route('/s/proxy/<path:path>')
-def web_hp_default(path):
-    return web_resource('index.html')
 
 
 # dist web contents
