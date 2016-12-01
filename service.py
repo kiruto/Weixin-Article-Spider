@@ -335,6 +335,7 @@ def _get_log_path():
 
 if __name__ == '__main__':
     web_service.pre_start()
+    print('Web services deployed.')
     handler = RotatingFileHandler(_get_log_path(), maxBytes=100000, backupCount=1)
     handler.setLevel(logging.DEBUG)
     app.logger.addHandler(handler)

@@ -102,7 +102,8 @@ class DownloadTask:
         result.encoding = _get_encoding_from_response(result)
         return result
 
-    def _get_page_by_web_driver(self, url=None, host=None, referer=None, **kwargs):
+    @classmethod
+    def _get_page_by_web_driver(cls, url=None, host=None, referer=None, **kwargs):
         driver = botdriver.get_driver()
         driver.get(url)
         driver.implicitly_wait(60)
@@ -137,13 +138,15 @@ class DownloadedDocument:
         if db_helper.get_article(article_id) is None:
             author = '' if not self.subscribe else self.subscribe["name"]
             db_helper.insert_article(self.download_info, self.write_to_file(), author)
+            return 'saved'
         else:
             print("article %s has already exist." % article_id)
+            return 'skipped'
 
     def save(self):
         try:
-            self.insert_into_db()
-            return True, 'saved'
+            msg = self.insert_into_db()
+            return True, msg
         except Exception as e:
             print(e.message, traceback.format_exc())
             return False, e.message

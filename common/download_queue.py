@@ -201,8 +201,9 @@ class SpiderThread(threading.Thread):
                 if self.stopped():
                     break
                 task = DownloadTask(info_list.pop(0), subscribe)
-                delay()
                 response, msg = task.request()
+                if msg == 'saved':
+                    delay()
                 self.sub_progress += 1
                 if not response:
                     self.e(msg)

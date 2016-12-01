@@ -5,6 +5,7 @@ import {Injectable, Inject} from "@angular/core";
 import {Article} from "./articles.component";
 import {Http} from "@angular/http";
 import 'rxjs/add/operator/toPromise';
+import {formatDate} from "./utils";
 @Injectable()
 export class ArticleService {
   constructor(@Inject(Http) private http: Http) {}
@@ -51,8 +52,7 @@ export class ArticleService {
 
   private static validDate(date: String) {
     if (date == '') {
-      let today = new Date();
-      return today.getFullYear() + "-" + (today.getMonth() + 1) + "-" + today.getDate();
+      return formatDate();
     }
     return date;
   }

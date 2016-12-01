@@ -5,11 +5,11 @@ import {StatusComponent} from "./status.component";
 import {SettingsComponent} from "./settings.component";
 import {LogsComponent} from "./logs.component";
 import {IFrameComponent} from "./iframe.component";
+import {formatDate} from "./utils";
 /**
  * Created by yuriel on 11/23/16.
  */
-let today = new Date();
-let todayString: String = today.getFullYear() + "-" + (today.getMonth() + 1) + "-" + today.getDate();
+let todayString: String = formatDate();
 const routes: Routes = [
   { path: '', redirectTo: 'articles', pathMatch: 'full'},
   { path: 'articles', redirectTo: 'articles/created_at/' + todayString, pathMatch: 'full'},

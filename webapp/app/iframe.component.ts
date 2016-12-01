@@ -3,7 +3,8 @@
  */
 import {Component, OnInit} from "@angular/core";
 import {ActivatedRoute, Params} from "@angular/router";
-import {DomSanitizer, SafeResourceUrl} from     "@angular/platform-browser";
+import {DomSanitizer, SafeResourceUrl} from "@angular/platform-browser";
+import {getUrl} from "./config.constant";
 @Component({
   moduleId: module.id,
   selector: 'inner-frame',
@@ -24,16 +25,38 @@ export class IFrameComponent implements OnInit {
   }
 
   onLoad(element: HTMLIFrameElement) {
+    this.proxyImgs(element);
+    this.removeScripts(element);
+    this.removeOtherElements(element);
+    element.style.height = element.contentWindow.document.body.scrollHeight + 'px';
+  }
+
+  proxyImgs(element: HTMLIFrameElement) {
     let imgs = element.contentDocument.getElementsByTagName('img');
-    console.log(imgs);
     Array.prototype.forEach.call(imgs, (node: Element) => {
       let src = node.getAttribute('data-src');
-      if (!src) return;
+      if (!src) {
+        src = node.getAttribute('data-backsrc');
+      }
+      if (!src) {
+        src = node.getAttribute('src');
+        if (!src || !src.startsWith('http://mmbiz.qpic.cn')) return;
+      }
       let srcEncode = encodeURIComponent(src);
-      node.setAttribute('src', '/proxy/image/' + srcEncode);
+      node.setAttribute('src', getUrl('/proxy/image/' + srcEncode));
     });
+  }
+
+  removeScripts(element: HTMLIFrameElement) {
+    let scripts = element.contentDocument.getElementsByTagName('script');
+    let i = scripts.length;
+    while(i--) {
+      scripts[i].parentNode.removeChild(scripts[i])
+    }
+  }
+
+  removeOtherElements(element: HTMLIFrameElement) {
     element.contentDocument.getElementById('sg_cmt_area').remove();
-    element.style.height = element.contentWindow.document.body.scrollHeight + 'px';
   }
 
   getUrl() {
