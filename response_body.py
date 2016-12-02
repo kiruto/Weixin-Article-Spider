@@ -20,5 +20,10 @@ class ResponseBody(dict):
     def __init__(self, flag=1, msg='ok', **kwargs):
         super(ResponseBody, self).__init__(flag=flag, msg=msg, **kwargs)
 
+    @classmethod
+    def __call__(cls, **kwargs):
+        instance = ResponseBody(**kwargs)
+        return instance.format()
+
     def format(self):
         return flask.jsonify(self)

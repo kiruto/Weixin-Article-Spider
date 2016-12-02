@@ -206,3 +206,8 @@ html, body {
 .mdl-demo .mdl-menu__container {
   z-index: 99;
 }
+
+.bot-stop-scrolling {
+  height: 100%;
+  overflow: hidden;
+}

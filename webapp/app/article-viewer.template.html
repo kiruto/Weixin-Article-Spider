@@ -1,0 +1,10 @@
+<div id="article-viewer"
+     style="position: absolute;
+            background-color: rgba(0,0,0,0.8);
+            min-height: 100%;
+            width: 100%;
+            z-index: 10;"
+     [hidden]="hide"
+     (click)="close()">
+  <inner-frame style="margin: 20px 0 20px 0; display: block;"></inner-frame>
+</div>

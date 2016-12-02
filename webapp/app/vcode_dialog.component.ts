@@ -3,7 +3,7 @@
  */
 import {Component, OnInit, Input} from "@angular/core";
 import {VCodeService} from "./vcode.service";
-import {MDLDialog} from "./mdl_components";
+import {MDLDialog} from "./mdl-components";
 @Component({
   moduleId: module.id,
   selector: 'vcode-dialog',

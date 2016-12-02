@@ -1,10 +1,12 @@
 /**
  * Created by yuriel on 11/23/16.
  */
-import {Component, OnInit, Inject} from "@angular/core";
+import {Component, OnInit, Inject, Output, EventEmitter} from "@angular/core";
 import {ArticleService} from "./article.service";
 import {ActivatedRoute, Params, Router} from "@angular/router";
 import { Location } from '@angular/common';
+import {getUrl} from "./config.constant";
+import {ArticleViewerService} from "./article-viewer.service";
 
 export class Article {
   hash_id: String;
@@ -44,9 +46,10 @@ export class ArticlesComponent implements OnInit {
 
   constructor(
     private router: Router,
-    @Inject(ArticleService) private articleService: ArticleService,
-    @Inject(ActivatedRoute) private route: ActivatedRoute,
-    @Inject(Location) private location: Location
+    private articleService: ArticleService,
+    private articleViewerService: ArticleViewerService,
+    private route: ActivatedRoute,
+    private location: Location
   ) {}
 
   ngOnInit(): void {
@@ -78,7 +81,11 @@ export class ArticlesComponent implements OnInit {
   }
 
   viewArticle(article: Article) {
-    this.router.navigate(['proxy/', this.getProxyUrlByPath(article.content)]);
+    this.articleViewerService.url.emit(this.getProxyUrlByPath(article.content));
+  }
+
+  viewArticleInNewWindow(article: Article) {
+    window.open(getUrl('/s/proxy/' + encodeURIComponent(this.getProxyUrlByPath(article.content))));
   }
 
   getProxyUrlByPath(path: string) {

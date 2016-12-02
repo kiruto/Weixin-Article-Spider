@@ -18,6 +18,8 @@ import {MDL} from "./mdl.directive";
 import {VCodeService} from "./vcode.service";
 import {VCodeDialogComponent} from "./vcode_dialog.component";
 import {IFrameComponent} from "./iframe.component";
+import {ArticleViewerService} from "./article-viewer.service";
+import {ArticleViewerComponent} from "./article-viewer.component";
 
 
 @NgModule({
@@ -31,9 +33,10 @@ import {IFrameComponent} from "./iframe.component";
     StatusComponent,
     VCodeDialogComponent,
     IFrameComponent,
+    ArticleViewerComponent,
     MDL
   ],
-  providers:    [ ArticleService, TimingRequestService, VCodeService ],
+  providers:    [ ArticleService, TimingRequestService, VCodeService, ArticleViewerService ],
   bootstrap:    [ AppComponent ]
 })
 export class AppModule { }

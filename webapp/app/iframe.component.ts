@@ -4,7 +4,9 @@
 import {Component, OnInit} from "@angular/core";
 import {ActivatedRoute, Params} from "@angular/router";
 import {DomSanitizer, SafeResourceUrl} from "@angular/platform-browser";
+import { Location } from '@angular/common';
 import {getUrl} from "./config.constant";
+import {ArticleViewerService} from "./article-viewer.service";
 @Component({
   moduleId: module.id,
   selector: 'inner-frame',
@@ -13,25 +15,40 @@ import {getUrl} from "./config.constant";
 export class IFrameComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
-    private santization: DomSanitizer
+    private location: Location,
+    private santization: DomSanitizer,
+    private articleViewerService: ArticleViewerService
   ) {}
 
   ngOnInit() {
+    if (this.location.path().includes('proxy')) {
+      this.setUrl(this.getUrl())
+    } else {
+      this.articleViewerService.url.subscribe((url: string) => {
+        if ('' != url.trim()) {
+          this.setUrl(decodeURIComponent(url));
+        }
+      })
+    }
+  }
+
+  setUrl(url: string) {
     let frame = document.getElementById('iframe') as HTMLIFrameElement;
-    frame.setAttribute('src', this.getUrl());
+    frame.src = url;
     frame.onload = () => {
+      frame.style.height = '100%';
       this.onLoad(frame);
     }
   }
 
-  onLoad(element: HTMLIFrameElement) {
+  private onLoad(element: HTMLIFrameElement) {
     this.proxyImgs(element);
     this.removeScripts(element);
     this.removeOtherElements(element);
     element.style.height = element.contentWindow.document.body.scrollHeight + 'px';
   }
 
-  proxyImgs(element: HTMLIFrameElement) {
+  private proxyImgs(element: HTMLIFrameElement) {
     let imgs = element.contentDocument.getElementsByTagName('img');
     Array.prototype.forEach.call(imgs, (node: Element) => {
       let src = node.getAttribute('data-src');
@@ -47,7 +64,7 @@ export class IFrameComponent implements OnInit {
     });
   }
 
-  removeScripts(element: HTMLIFrameElement) {
+  private removeScripts(element: HTMLIFrameElement) {
     let scripts = element.contentDocument.getElementsByTagName('script');
     let i = scripts.length;
     while(i--) {
@@ -55,11 +72,11 @@ export class IFrameComponent implements OnInit {
     }
   }
 
-  removeOtherElements(element: HTMLIFrameElement) {
+  private removeOtherElements(element: HTMLIFrameElement) {
     element.contentDocument.getElementById('sg_cmt_area').remove();
   }
 
-  getUrl() {
+  private getUrl() {
     let result: string = '';
     this.route.params.forEach(params => {
       result = "/.." + decodeURIComponent(params['url_encoded']);
@@ -68,7 +85,7 @@ export class IFrameComponent implements OnInit {
     return result;
   }
 
-  getSafeUrl() {
+  private getSafeUrl() {
     let result: any = null;
     this.route.params.forEach(params => {
       let url = "/.." + decodeURIComponent(params['url_encoded']);
