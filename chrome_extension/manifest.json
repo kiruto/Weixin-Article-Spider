@@ -1,0 +1,30 @@
+{
+  "manifest_version": 2,
+
+  "name": "一键转载",
+  "description": "一键转载至UEditor",
+  "version": "1.0",
+
+  "browser_action": {
+    "default_icon": "icon.jpg"
+  },
+  "background": {
+    "scripts": ["background.js"]
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "http://*/*",
+        "https://*/*"
+    ],
+      "js": ["main.js"]
+    }
+  ],
+  "permissions": [
+    "contextMenus",
+    "storage",
+    "tabs",
+    "http://*/*",
+    "https://*/*"
+  ]
+}
