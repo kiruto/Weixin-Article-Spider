@@ -35,19 +35,18 @@ from storage.sqlite_storage import SQLiteStorage
 
 app = Flask(__name__)
 
-if not os.path.exists(config.local_storage_path):
-    os.makedirs(config.local_storage_path)
 
-if not os.path.exists(config.db_path):
-    os.makedirs(config.local_storage_path)
-
-if not os.path.exists(config.log_path):
-    os.makedirs(config.log_path)
-
-if not os.path.exists(config.local_storage_raw_file_path):
-    os.makedirs(config.local_storage_raw_file_path)
+def check_path(*paths):
+    for path in paths:
+        if not os.path.exists(path):
+            os.makedirs(path)
 
 
+check_path(config.local_storage_path,
+           config.db_path,
+           config.log_path,
+           config.local_storage_raw_file_path,
+           config.web_path)
 sqlite_helper = SQLiteStorage()
 
 
