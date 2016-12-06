@@ -11,10 +11,11 @@ import {HOME_PATH} from "./config.constant";
 })
 export class AppComponent implements OnInit {
   title = 'Weixin Spider Article Viewer';
+  homeTag = new Tag('文章列表', 'articles')
   tags = [
-    new Tag('文章列表', 'articles'),
+    this.homeTag,
     new Tag('订阅公众号', 'settings'),
-    new Tag('更新日志', 'logs'),
+    new Tag('相关说明', 'logs'),
     new Tag('状态', 'status')
   ];
   selected = this.tags[0];
@@ -32,5 +33,9 @@ export class AppComponent implements OnInit {
   onSelect(tag: Tag): void  {
     console.log('clicked:' + tag.name);
     this.selected = tag;
+  }
+
+  home(): void {
+    this.selected = this.homeTag;
   }
 }

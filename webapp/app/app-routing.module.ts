@@ -11,6 +11,9 @@ import {HOME_PATH, TODAY_STRING} from "./config.constant";
  */
 
 const routes: Routes = [
+  { path: '', redirectTo: HOME_PATH, pathMatch: 'full' },
+  { path: '*', redirectTo: HOME_PATH },
+  { path: '**', redirectTo: HOME_PATH },
   { path: 'articles', children: [
     { path: '', redirectTo: 'created_at', pathMatch: 'full' },
     { path: 'created_at', children: [
@@ -29,10 +32,7 @@ const routes: Routes = [
   { path: 'proxy', children: [
     { path: ':url_encoded', component: IFrameComponent },
     { path: '', redirectTo: HOME_PATH, pathMatch: 'full' }
-  ] },
-  { path: '', redirectTo: HOME_PATH, pathMatch: 'full' },
-  { path: '*', redirectTo: HOME_PATH },
-  { path: '**', redirectTo: HOME_PATH }
+  ] }
 ];
 
 @NgModule({

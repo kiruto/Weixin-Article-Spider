@@ -27,7 +27,6 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     if (!detectUEditor()) return;
     if (request.action == "fill") {
-        // UE.getEditor('id_content').setContent(request.text);
         function_text = request.text.replace(/\"/g, "\\\"")
             .replace(/\'/g, "\\\'")
             .replace(/\n/g, '\\n');

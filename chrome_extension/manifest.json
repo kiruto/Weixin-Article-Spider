@@ -2,11 +2,11 @@
   "manifest_version": 2,
 
   "name": "一键转载",
-  "description": "一键转载至UEditor",
+  "description": "微信爬虫一键转载至UEditor示例",
   "version": "1.0",
 
   "browser_action": {
-    "default_icon": "icon.jpg"
+    "default_icon": "icon48.png"
   },
   "background": {
     "scripts": ["background.js"]
