@@ -2,16 +2,15 @@ import {formatDate} from "./utils";
 /**
  * Created by yuriel on 12/1/16.
  */
-export const HOST = window.location.hostname;
-export const PORT = '6303';
+export const HOST = window.location.host;
 
 export const TODAY_STRING: string = formatDate();
 export const HOME_PATH = 'articles/create_at/' + TODAY_STRING;
 
 export function getUrl(url: string): string {
   if (url.startsWith('/')) {
-    return 'http://' + HOST + ':' + PORT + url
+    return '//' + HOST + url
   } else {
-    return 'http://' + HOST + ':' + PORT + '/' + url
+    return '//' + HOST + '/' + url
   }
 }

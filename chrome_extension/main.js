@@ -27,11 +27,11 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     if (!detectUEditor()) return;
     if (request.action == "fill") {
-        function_text = request.text.replace(/\"/g, "\\\"")
+        let function_text = request.text.replace(/\"/g, "\\\"")
             .replace(/\'/g, "\\\'")
             .replace(/\n/g, '\\n');
-        var injectedCode = 'UE.getEditor(\'id_content\').setContent(\'' + function_text + '\')';
-        var script = document.createElement('script');
+        let injectedCode = 'UE.getEditor(\'id_content\').setContent(\'' + function_text + '\')';
+        let script = document.createElement('script');
         script.textContent = injectedCode;
         (document.head || document.documentElement).appendChild(script);
         script.parentNode.removeChild(script);
