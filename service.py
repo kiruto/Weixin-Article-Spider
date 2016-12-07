@@ -70,6 +70,7 @@ def hp():
     response = redirect('/s/index.html')
     if config.force_ssl and response.headers['Location'].startswith('http://'):
         response.headers['Location'].replace('http://', 'https://')
+    return response
 
 
 def homepage_redirecting(*args):
