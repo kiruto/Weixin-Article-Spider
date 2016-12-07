@@ -36,6 +36,20 @@ from storage.sqlite_storage import SQLiteStorage
 app = Flask(__name__)
 
 
+if config.force_ssl:
+    class ReverseProxied(object):
+        def __init__(self, app):
+            self.app = app
+
+        def __call__(self, environ, start_response):
+            scheme = environ.get('HTTP_X_FORWARDED_PROTO')
+            if scheme:
+                environ['wsgi.url_scheme'] = scheme
+            return self.app(environ, start_response)
+
+    app.wsgi_app = ReverseProxied(app.wsgi_app)
+
+
 def check_path(*paths):
     for path in paths:
         if not os.path.exists(path):
