@@ -54,10 +54,10 @@ sqlite_helper = SQLiteStorage()
 def reject_head_request():
     if request.method == 'HEAD':
         abort(400)
-    if config.force_ssl and request.url.startswith('http://'):
-        url = request.url.replace('http://', 'https://', 1)
-        code = 301
-        return redirect(url, code=code)
+    # if config.force_ssl and request.url.startswith('http://'):
+    #     url = request.url.replace('http://', 'https://', 1)
+    #     code = 301
+    #     return redirect(url, code=code)
 
 
 @app.errorhandler(404)
