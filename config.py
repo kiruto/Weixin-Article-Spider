@@ -8,6 +8,8 @@ debug = False
 # flask http端口
 http_port = 6303
 
+force_ssl = False
+
 # 取得页面信息的方法
 engine = constants.browser
 

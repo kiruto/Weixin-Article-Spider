@@ -2,7 +2,7 @@ import {formatDate} from "./utils";
 /**
  * Created by yuriel on 12/1/16.
  */
-export const HOST = '127.0.0.1';
+export const HOST = window.location.hostname;
 export const PORT = '6303';
 
 export const TODAY_STRING: string = formatDate();

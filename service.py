@@ -54,6 +54,10 @@ sqlite_helper = SQLiteStorage()
 def reject_head_request():
     if request.method == 'HEAD':
         abort(400)
+    if config.force_ssl and request.url.startswith('http://'):
+        url = request.url.replace('http://', 'https://', 1)
+        code = 301
+        return redirect(url, code=code)
 
 
 @app.errorhandler(404)
@@ -63,7 +67,9 @@ def page_not_found(e):
 
 @app.route('/')
 def hp():
-    return redirect('/s/index.html')
+    response = redirect('/s/index.html')
+    if config.force_ssl and response.headers['Location'].startswith('http://'):
+        response.headers['Location'].replace('http://', 'https://')
 
 
 def homepage_redirecting(*args):
