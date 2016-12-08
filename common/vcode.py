@@ -62,7 +62,7 @@ def resolve_vcode(code, vcode_from=vcode_type):
     return True
 
 
-def create_session(driver):
+def create_session(driver, vcode_from=VCODE_FROM_ARTICLE_LIST):
     print('need input vcode')
     download_queue.log_to_bot_process(flag='error', msg='需要输入验证码(时限1分钟)')
     global temp_driver
@@ -72,6 +72,7 @@ def create_session(driver):
         close_session()
     if driver:
         temp_driver = driver
+        generate_code(vcode_from)
 
 
 def close_session():

@@ -13,7 +13,6 @@ export class VCodeDialogComponent implements OnInit {
 
   @Input() inputValue: string = '';
   type: string = '';
-  dialog = document.querySelector('#vcode_dialog') as MDLDialog;
   vcodeImgSrc = '';
 
   constructor(private vcodeService: VCodeService) {}
@@ -35,14 +34,18 @@ export class VCodeDialogComponent implements OnInit {
     })
   }
 
+  getDialog(): MDLDialog {
+    return document.querySelector('#vcode_dialog') as MDLDialog;
+  }
+
   showInputDialog() {
-    this.dialog.showModal()
+    this.getDialog().showModal()
   }
 
   submit() {
     this.vcodeService.resolveVcode(this.inputValue, this.type).catch(err => {
       console.log(err);
     });
-    this.dialog.close()
+    this.getDialog().close()
   }
 }
