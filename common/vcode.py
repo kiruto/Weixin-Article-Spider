@@ -34,21 +34,24 @@ def generate_code(vcode_from=VCODE_FROM_ARTICLE_LIST):
     right = location['x'] + size['width']
     bottom = location['y'] + size['height']
 
+    print('p1x%s, p1y%s, p2x%s, p2y%s' % (left, top, right, bottom))
+
     im = im.crop((left, top, right, bottom))  # defines crop points
     im.save(config.cache_path + filename + '.png')  # saves new cropped image
+    print('saved')
 
 
 def get_vcode_img_file():
     return config.cache_path + 'article_list_vcode.png'
 
 
-def resolve_vcode(code, vcode_from=vcode_type):
+def resolve_vcode(code, vcode_from):
     if not temp_driver:
         raise VCodeSessionException('session not created.')
     if not vcode_from == vcode_type:
         raise VCodeSessionException('try to resolve a wrong vcode')
     if vcode_from == VCODE_FROM_ARTICLE_LIST:
-        input_element_id = 'verify_img'
+        input_element_id = 'input'
         submit_element_id = 'bt'
     else:
         return False
@@ -68,6 +71,10 @@ def create_session(driver, vcode_from=VCODE_FROM_ARTICLE_LIST):
     global temp_driver
     global solved
     solved = False
+    print('temp_driver')
+    print(temp_driver)
+    print('driver')
+    print(driver)
     if temp_driver:
         close_session()
     if driver:
