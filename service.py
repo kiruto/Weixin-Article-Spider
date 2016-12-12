@@ -316,6 +316,10 @@ def resolve_vcode():
 @app.route('/proxy/image/<path:url_encoded>')
 def proxy_image(url_encoded):
     url = urllib.unquote(url_encoded).decode('utf8')
+    if url.startswith(u'http:/') and not url.startswith(u'http://'):
+        url = url.replace(u'http:/', u'http://')
+    elif url.startswith(u'https:/') and not url.startswith(u'https://'):
+        url = url.replace(u'https:/', u'https://')
     host = url.split("//")[-1].split("/")[0]
     headers = {
         'Accept': 'image/webp,image/*,*/*;q=0.8',

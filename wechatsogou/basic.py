@@ -154,7 +154,8 @@ class WechatSogouBasic(WechatSogouBase):
         driver.get(url)
         driver.implicitly_wait(60)
         time.sleep(3)
-        text = self._replace_html(driver.page_source)
+        # text = self._replace_html(driver.page_source)
+        text = driver.page_source.encode('utf-8')
         while not self.solve_vcode(driver, text):
             pass
         driver.close()
