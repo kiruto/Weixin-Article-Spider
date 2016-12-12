@@ -302,7 +302,7 @@ def get_vcode_status():
     ).format()
 
 
-@app.route('/rest/vode/resolve', methods=['POST'])
+@app.route('/rest/vcode/resolve', methods=['POST'])
 def resolve_vcode():
     data = request.data
     dct = json.loads(data)
