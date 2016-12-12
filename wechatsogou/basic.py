@@ -170,6 +170,7 @@ class WechatSogouBasic(WechatSogouBase):
         check_vcode, vcode_type = self._check_vcode(response_text)
         if vcode_type == 2:
             # try to solve vcode
+            common.save_raw_error_log(response_text)
             from common import vcode
             vcode.create_session(driver)
             for i in range(60):

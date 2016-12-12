@@ -1,7 +1,7 @@
 /**
  * Created by yuriel on 11/30/16.
  */
-import {Component, OnInit, Input} from "@angular/core";
+import {Component, OnInit, Input, AfterContentInit} from "@angular/core";
 import {VCodeService} from "./vcode.service";
 import {MDLDialog} from "./mdl-components";
 @Component({
@@ -9,7 +9,7 @@ import {MDLDialog} from "./mdl-components";
   selector: 'vcode-dialog',
   templateUrl: 'vcode_dialog.html'
 })
-export class VCodeDialogComponent implements OnInit {
+export class VCodeDialogComponent implements AfterContentInit {
 
   @Input() inputValue: string = '';
   type: string = '';
@@ -17,7 +17,7 @@ export class VCodeDialogComponent implements OnInit {
 
   constructor(private vcodeService: VCodeService) {}
 
-  ngOnInit() {
+  ngAfterContentInit() {
     this.requestVCodeStatus()
   }
 
@@ -25,7 +25,7 @@ export class VCodeDialogComponent implements OnInit {
     this.vcodeService.loadVcode().then(response => {
       if(response.need_input) {
         this.type = response.type;
-        this.vcodeImgSrc = '/vcode/img?v=' + Math.random();
+        this.vcodeImgSrc = '/vcode/img/?v=' + Math.random();
         this.showInputDialog();
       }
       setTimeout(this.requestVCodeStatus.bind(this), 1000);

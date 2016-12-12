@@ -302,13 +302,13 @@ def get_vcode_status():
     ).format()
 
 
-@app.route('/rest/vode/resolve', methods=['POST'])
+@app.route('/rest/vcode/resolve', methods=['POST'])
 def resolve_vcode():
     data = request.data
     dct = json.loads(data)
     if isinstance(dct, dict):
         if dct['type'] == vcode.vcode_type:
-            vcode.resolve_vcode(dct['vcode'])
+            vcode.resolve_vcode(dct['vcode'], dct['type'])
             return get_success_response()
     return get_error_response('post a wrong data')
 
@@ -330,10 +330,10 @@ def proxy_image(url_encoded):
     return resp.raw.read(), resp.status_code, resp.headers.items()
 
 
-@app.route('/vcode/img')
+@app.route('/vcode/img/')
 def get_vcode_img():
     if vcode.vcode_type == vcode.VCODE_FROM_ARTICLE_LIST:
-        return app.send_static_file(config.cache_path + 'article_list_vcode.png')
+        return send_file(config.cache_path + 'article_list_vcode.png')
     else:
         return get_error_response('no vcode image found').format()
 
