@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import hashlib
 import json
+import re
 import sqlite3
 import time
 import datetime
@@ -36,6 +37,8 @@ class SQLiteStorage:
         for i in id_list:
             i = i.strip()
             if len(i) == 0:
+                continue
+            if not common.is_wxid(i):
                 continue
             p = (i, )
             data.append(p)

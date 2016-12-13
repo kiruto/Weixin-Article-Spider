@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import os
+import re
 import time
 import traceback
 from datetime import datetime
@@ -8,6 +9,10 @@ import config
 import settings
 
 __version__ = "1.0"
+
+
+def is_wxid(wxid):
+    return True if re.match('^[0-9a-zA-Z\-_]+$', wxid) else False
 
 
 def get_time():
