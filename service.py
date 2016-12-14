@@ -300,7 +300,7 @@ def get_wxid_list():
 @app.route('/rest/vcode/status')
 def get_vcode_status():
     return ResponseBody(
-        need_input=False if not vcode.temp_driver else True,
+        need_input=False if not vcode.temp_driver or not os.path.exists(config.cache_path + 'article_list_vcode.png') else True,
         type=vcode.vcode_type
     ).format()
 

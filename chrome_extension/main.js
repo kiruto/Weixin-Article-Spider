@@ -46,42 +46,44 @@ function cleanStyles(html) {
     // Remove all u tags
     html = html.replace(/<\/?u[^>]*>/gi, "" );
     // Remove onmouseover attributes
-    html = html.replace(/<(\w[^>]*) onmouseover=([^ |>]*)([^>]*)/gi, "<$1$3") ;
+    html = html.replace(/<(\w[^>]*) onmouseover=([^ |>]*)([^>]*)/gi, "<$1$3");
     // Remove onmouseout attributes
-    html = html.replace(/<(\w[^>]*) onmouseout=([^ |>]*)([^>]*)/gi, "<$1$3") ;
+    html = html.replace(/<(\w[^>]*) onmouseout=([^ |>]*)([^>]*)/gi, "<$1$3");
 
     // Remove Class attributes
-    html = html.replace(/<(\w[^>]*) class=([^ |>]*)([^>]*)/gi, "<$1$3") ;
+    html = html.replace(/<(\w[^>]*) class=([^ |>]*)([^>]*)/gi, "<$1$3");
     // Remove Face attributes
-    html = html.replace(/<(\w[^>]*) face=([^ |>]*)([^>]*)/gi, "<$1$3") ;
+    html = html.replace(/<(\w[^>]*) face=([^ |>]*)([^>]*)/gi, "<$1$3");
     // Remove Size attributes
-    html = html.replace(/<(\w[^>]*) size=([^ |>]*)([^>]*)/gi, "<$1$3") ;
+    html = html.replace(/<(\w[^>]*) size=([^ |>]*)([^>]*)/gi, "<$1$3");
     // Remove X:num attributes
-    html = html.replace(/<(\w[^>]*) x:num=([^ |>]*)([^>]*)/gi, "<$1$3") ;
+    html = html.replace(/<(\w[^>]*) x:num=([^ |>]*)([^>]*)/gi, "<$1$3");
     // Remove Width attributes
-    html = html.replace(/<(\w[^>]*) width=([^ |>]*)([^>]*)/gi, "<$1$3") ;
+    html = html.replace(/<(\w[^>]*) width=([^ |>]*)([^>]*)/gi, "<$1$3");
     // Remove Height attributes
-    html = html.replace(/<(\w[^>]*) height=([^ |>]*)([^>]*)/gi, "<$1$3") ;
+    html = html.replace(/<(\w[^>]*) height=([^ |>]*)([^>]*)/gi, "<$1$3");
     // Remove Class attributes
-    html = html.replace(/<(\w[^>]*) class=([^  |>]*)([^>]*)/gi, "<$1$3") ;
+    html = html.replace(/<(\w[^>]*) class=([^ |>]*)([^>]*)/gi, "<$1$3");
     // Remove Style attributes
-    html = html.replace(/<(\w[^>]*) style="([^"]*)"([^>]*)/gi, "<$1$3") ;
+    html = html.replace(/<(\w[^>]*) style="([^"]*)"([^>]*)/gi, "<$1$3");
     // Remove Lang attributes
-    html = html.replace(/<(\w[^>]*) lang=([^ |>]*)([^>]*)/gi, "<$1$3") ;
+    html = html.replace(/<(\w[^>]*) lang=([^ |>]*)([^>]*)/gi, "<$1$3");
     // Remove XML elements and declarations
-    html = html.replace(/<\\?\?xml[^>]*>/gi, "") ;
+    html = html.replace(/<\\?\?xml[^>]*>/gi, "");
     // Remove Tags with XML namespace declarations: <o:p></o:p>
-    html = html.replace(/<\/?\w+:[^>]*>/gi, "") ;
+    html = html.replace(/<\/?\w+:[^>]*>/gi, "");
     // Replace the &nbsp;
     html = html.replace(/&nbsp;/, " " );
 
     // Transform <P> to <DIV>
-    let re = new RegExp("(<P)([^>]*>.*?)(<\/P>)","gi") ; // Different because of a IE 5.0 error
-    html = html.replace( re, "<p$2</p>" ) ;
+    let re = new RegExp("(<P)([^>]*>.*?)(<\/P>)","gi"); // Different because of a IE 5.0 error
+    html = html.replace( re, "<p$2</p>" );
 
     html=html.replace(/ x:num/g,"");
 
-    return html ;
+    html = html.replace(/<p>[(<br>) ]*<\/p>/gi, "");
+
+    return html;
 }
 
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
