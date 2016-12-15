@@ -91,7 +91,7 @@ class SQLiteStorage:
         date_time = time.strftime("%Y-%m-%d", date_time)
         extra = json.dumps(article)
         data = (hash_id, date_time, article['title'], "", extra, local_url, version, author_name)
-        c.execute(u"""INSERT INTO article(hash_id, date_time, title, info, extra, content, version, author)
+        c.execute("""INSERT INTO article(hash_id, date_time, title, info, extra, content, version, author)
                   VALUES (?, ?, ?, ?, ?, ?, ?, ?)""", data)
         self._connect.commit()
         c.close()
