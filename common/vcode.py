@@ -59,6 +59,7 @@ def resolve_vcode(code, vcode_from):
     form.clear()
     form.send_keys(code)
     submit = temp_driver.find_element_by_id(submit_element_id)
+    print('!!clicked!!')
     submit.click()
     global solved
     solved = True

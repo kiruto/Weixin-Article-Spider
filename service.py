@@ -3,6 +3,7 @@ from __future__ import print_function
 
 import json
 import os
+import re
 import urllib
 import urlparse
 from logging.handlers import RotatingFileHandler
@@ -194,6 +195,8 @@ def list_all_articles_by_id(account_id):
 
 @app.route('/rest/wxid/add/<wxid>')
 def add_wxid(wxid):
+    if not common.is_wxid(wxid):
+        return get_error_response('cannot solve this id').format()
     try:
         sqlite_helper.subscribe(wxid)
         return get_success_response().format()
@@ -297,7 +300,7 @@ def get_wxid_list():
 @app.route('/rest/vcode/status')
 def get_vcode_status():
     return ResponseBody(
-        need_input=False if not vcode.temp_driver else True,
+        need_input=False if not vcode.temp_driver or not os.path.exists(config.cache_path + 'article_list_vcode.png') else True,
         type=vcode.vcode_type
     ).format()
 

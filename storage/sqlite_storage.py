@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import hashlib
 import json
+import re
 import sqlite3
 import time
 import datetime
@@ -36,6 +37,8 @@ class SQLiteStorage:
         for i in id_list:
             i = i.strip()
             if len(i) == 0:
+                continue
+            if not common.is_wxid(i):
                 continue
             p = (i, )
             data.append(p)
@@ -88,7 +91,7 @@ class SQLiteStorage:
         date_time = time.strftime("%Y-%m-%d", date_time)
         extra = json.dumps(article)
         data = (hash_id, date_time, article['title'], "", extra, local_url, version, author_name)
-        c.execute(u"""INSERT INTO article(hash_id, date_time, title, info, extra, content, version, author)
+        c.execute("""INSERT INTO article(hash_id, date_time, title, info, extra, content, version, author)
                   VALUES (?, ?, ?, ?, ?, ?, ?, ?)""", data)
         self._connect.commit()
         c.close()
