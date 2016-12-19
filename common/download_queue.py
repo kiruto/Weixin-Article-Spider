@@ -147,7 +147,7 @@ class SpiderThread(threading.Thread):
 
     def _generate_article_list(self):
         subscribes = self.wxid_list
-        print(subscribes)
+        # print(subscribes)
         try:
             info_list = list()
             for s in subscribes:
