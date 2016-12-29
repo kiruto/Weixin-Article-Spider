@@ -156,8 +156,8 @@ class WechatSogouBasic(WechatSogouBase):
         time.sleep(3)
         # text = self._replace_html(driver.page_source)
         text = driver.page_source.encode('utf-8')
-        while not self.solve_vcode(driver, text):
-            pass
+        if not self.solve_vcode(driver, text):
+            raise WechatSogouException('not solved vcode')
         driver.close()
         return text
 
