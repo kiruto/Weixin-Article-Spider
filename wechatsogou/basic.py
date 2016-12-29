@@ -159,7 +159,10 @@ class WechatSogouBasic(WechatSogouBase):
         if not self.solve_vcode(driver, text):
             driver.delete_all_cookies()
             raise WechatSogouException('not solved vcode')
-        driver.close()
+        try:
+            driver.close()
+        except:
+            pass
         return text
 
     def solve_vcode(self, driver, response_text):
