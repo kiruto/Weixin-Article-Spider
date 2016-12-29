@@ -15,17 +15,16 @@ vcode_type = None
 
 
 def generate_code(vcode_from=VCODE_FROM_ARTICLE_LIST):
+    global vcode_type
     if not temp_driver:
         raise VCodeSessionException('session not created.')
     if vcode_from == VCODE_FROM_ARTICLE_LIST:
         filename = 'article_list_vcode'
         element_id = 'verify_img'
-        global vcode_type
         vcode_type = VCODE_FROM_ARTICLE_LIST
     elif vcode_from == VCODE_LOCKED_IP:
         filename = 'locked_ip_vcode'
         element_id = 'seccodeImage'
-        global vcode_type
         vcode_type = VCODE_LOCKED_IP
     else:
         return
