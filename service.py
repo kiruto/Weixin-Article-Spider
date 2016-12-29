@@ -299,8 +299,9 @@ def get_wxid_list():
 
 @app.route('/rest/vcode/status')
 def get_vcode_status():
+    need_input = False if not vcode.temp_driver or not os.path.exists(config.cache_path + 'article_list_vcode.png') or not os.path.exists(config.cache_path + 'locked_ip_vcode.png') else True
     return ResponseBody(
-        need_input=False if not vcode.temp_driver or not os.path.exists(config.cache_path + 'article_list_vcode.png') else True,
+        need_input=need_input,
         type=vcode.vcode_type
     ).format()
 
