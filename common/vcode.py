@@ -107,7 +107,10 @@ def close_session():
             pass
         temp_driver = None
     try:
-        os.remove(config.cache_path + 'article_list_vcode.png')
+        if vcode_type == VCODE_FROM_ARTICLE_LIST:
+            os.remove(config.cache_path + 'article_list_vcode.png')
+        elif vcode_type == VCODE_LOCKED_IP:
+            os.remove(config.cache_path + 'locked_ip_vcode.png')
     except Exception as e:
         print('error at delete file')
         print(e)
