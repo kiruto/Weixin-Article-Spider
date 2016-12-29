@@ -313,7 +313,7 @@ def resolve_vcode():
     if isinstance(dct, dict):
         if dct['type'] == vcode.vcode_type:
             vcode.resolve_vcode(dct['vcode'], dct['type'])
-            return get_success_response()
+            return get_success_response().format()
     return get_error_response('post a wrong data').format()
 
 
