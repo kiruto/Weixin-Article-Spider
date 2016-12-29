@@ -342,6 +342,8 @@ def proxy_image(url_encoded):
 def get_vcode_img():
     if vcode.vcode_type == vcode.VCODE_FROM_ARTICLE_LIST:
         return send_file(config.cache_path + 'article_list_vcode.png')
+    elif vcode.vcode_type == vcode.VCODE_LOCKED_IP:
+        return send_file(config.cache_path + 'locked_ip_vcode.png')
     else:
         return get_error_response('no vcode image found').format()
 
