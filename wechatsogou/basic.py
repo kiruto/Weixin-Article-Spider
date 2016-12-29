@@ -168,17 +168,20 @@ class WechatSogouBasic(WechatSogouBase):
         :param response_text:
         :return: 是否已解决验证码问题
         """
+        from common import vcode
         check_vcode, vcode_type = self._check_vcode(response_text)
-        if vcode_type == 2:
+        if vcode_type == 1:
+            common.save_raw_error_log(response_text)
+            vcode.create_session(driver, vcode_from=vcode.VCODE_LOCKED_IP)
+        elif vcode_type == 2:
             # try to solve vcode
             common.save_raw_error_log(response_text)
-            from common import vcode
             vcode.create_session(driver)
-            for i in range(60):
-                time.sleep(1)
-                if vcode.solved:
-                    break
-            vcode.close_session()
+        for i in range(60):
+            time.sleep(1)
+            if vcode.solved:
+                break
+        vcode.close_session()
         return not check_vcode
 
     def _check_vcode(self, response_text):

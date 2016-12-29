@@ -7,6 +7,7 @@ from PIL import Image
 import config
 from common import download_queue
 
+VCODE_LOCKED_IP = 'locked_ip'
 VCODE_FROM_ARTICLE_LIST = 'article_list'
 temp_driver = None
 solved = False
@@ -21,6 +22,11 @@ def generate_code(vcode_from=VCODE_FROM_ARTICLE_LIST):
         element_id = 'verify_img'
         global vcode_type
         vcode_type = VCODE_FROM_ARTICLE_LIST
+    elif vcode_from == VCODE_LOCKED_IP:
+        filename = 'locked_ip_vcode'
+        element_id = 'seccodeImage'
+        global vcode_type
+        vcode_type = VCODE_LOCKED_IP
     else:
         return
     element = temp_driver.find_element_by_id(element_id)  # find part of the page you want image of
@@ -53,6 +59,9 @@ def resolve_vcode(code, vcode_from):
     if vcode_from == VCODE_FROM_ARTICLE_LIST:
         input_element_id = 'input'
         submit_element_id = 'bt'
+    elif vcode_from == VCODE_LOCKED_IP:
+        input_element_id = 'seccodeInput'
+        submit_element_id = 'submit'
     else:
         return False
     form = temp_driver.find_element_by_id(input_element_id)

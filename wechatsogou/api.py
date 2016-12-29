@@ -44,6 +44,8 @@ class WechatSogouApi(WechatSogouBasic):
         try:
             page = etree.HTML(text)
             lis = page.xpath('//ul[@class="news-list2"]/li')
+            if not lis:
+                common.save_raw_error_log(text, traceback.format_exc())
             relist = []
             for li in lis:
                 url = li.xpath('div/div[1]/a/@href')
