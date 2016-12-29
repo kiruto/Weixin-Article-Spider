@@ -158,10 +158,8 @@ class WechatSogouBasic(WechatSogouBase):
         text = driver.page_source.encode('utf-8')
         if not self.solve_vcode(driver, text):
             driver.delete_all_cookies()
-            driver.quit()
             raise WechatSogouException('not solved vcode')
-        else:
-            driver.close()
+        driver.close()
         return text
 
     def solve_vcode(self, driver, response_text):
