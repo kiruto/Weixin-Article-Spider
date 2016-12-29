@@ -204,6 +204,8 @@ class WechatSogouApi(WechatSogouBasic):
             text = self._get_gzh_article_by_url_text(url)
         elif wechatid:
             gzh_info = self.get_gzh_info(wechatid)
+            if not gzh_info:
+                raise WechatSogouException('%s not exist' % wechatid)
             url = gzh_info['url']
             text = self._get_gzh_article_by_url_text(url)
         elif wechat_name:

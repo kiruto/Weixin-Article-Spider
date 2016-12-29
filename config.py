@@ -52,7 +52,11 @@ agent = (
 )
 
 # 当前目录
-current_path = os.path.dirname(__file__) + os.sep
+current_path = os.path.dirname(__file__)
+if not current_path:
+    current_path = os.getcwd() + os.sep
+else:
+    current_path += os.sep
 
 # cache
 cache_path = os.path.join(current_path, "cache") + os.sep

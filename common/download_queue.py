@@ -8,6 +8,7 @@ import constants
 from common import sogou_api
 from common.download_task import DownloadTask
 from storage.sqlite_storage import SQLiteStorage
+from wechatsogou.exceptions import WechatSogouException
 
 delay_time = 3
 
@@ -146,14 +147,18 @@ class SpiderThread(threading.Thread):
 
     def _generate_article_list(self):
         subscribes = self.wxid_list
-        print(subscribes)
+        # print(subscribes)
         try:
             info_list = list()
             for s in subscribes:
                 if self.stopped():
                     break
                 self.d("processing wxid=%s" % s['name'])
-                all_articles = sogou_api.get_articles_by_id(s['name'])
+                try:
+                    all_articles = sogou_api.get_articles_by_id(s['name'])
+                except WechatSogouException as e:
+                    self.e(e)
+                    continue
                 self.sub_tasks = len(all_articles)
                 for a in all_articles:
                     info_list.append(a)

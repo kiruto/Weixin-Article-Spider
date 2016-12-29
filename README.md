@@ -1,5 +1,15 @@
-# Source
+# Introduction
+微信公众号文章爬虫。本项目提供一个利用chrome抓取公众号文章的思路，若部署在你自己的服务器上，不需要输入验证码。
+项目业务由flask + Angular实现，http服务使用tornado。
+本项目还提供了一种使用场景，使用Chrome插件可以一键转载到UEditor。示例在chrome_extension目录中。
+
+# Demo
+http://weixin-article-spider-demo.exyui.com/
+
+# Sources
 https://github.com/kiruto/wxbot
+
+https://github.com/Chyroc/WechatSogou
 
 # PhantomJS
 http://phantomjs.org/download.html
@@ -19,7 +29,7 @@ https://nodejs.org/en/download/
 1. Make sure python have permission of this path to create files and directories.
 2. Create a directory named 'bin/PhantomJS', then download PhantomJS's bin file in it.
 3. Create a directory named 'bin/chrome', then download ChromeDrive's bin file in it.
-4. Find the file named 'config.constant.ts', edit the value of 'HOST' to your host.
+4. Create a directory named 'cache'.
 5. Create virtual environment named 'ENV', then activate.
 6. Run pip install requirements and npm install dependencies.
 7. Run python service.py.
