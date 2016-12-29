@@ -314,7 +314,7 @@ def resolve_vcode():
         if dct['type'] == vcode.vcode_type:
             vcode.resolve_vcode(dct['vcode'], dct['type'])
             return get_success_response()
-    return get_error_response('post a wrong data')
+    return get_error_response('post a wrong data').format()
 
 
 @app.route('/proxy/image/<path:url_encoded>')

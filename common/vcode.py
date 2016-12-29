@@ -33,17 +33,19 @@ def generate_code(vcode_from=VCODE_FROM_ARTICLE_LIST):
         location = element.location
         size = element.size
         temp_driver.save_screenshot(config.cache_path + filename + '.png')  # saves screenshot of entire page
-        im = Image.open(config.cache_path + filename + '.png')  # uses PIL library to open image in memory
 
-        left = location['x']
-        top = location['y']
-        right = location['x'] + size['width']
-        bottom = location['y'] + size['height']
+        if vcode_from == VCODE_FROM_ARTICLE_LIST:
+            im = Image.open(config.cache_path + filename + '.png')  # uses PIL library to open image in memory
 
-        print('p1x%s, p1y%s, p2x%s, p2y%s' % (left, top, right, bottom))
+            left = location['x']
+            top = location['y']
+            right = location['x'] + size['width']
+            bottom = location['y'] + size['height']
 
-        im = im.crop((left, top, right, bottom))  # defines crop points
-        im.save(config.cache_path + filename + '.png')  # saves new cropped image
+            print('p1x%s, p1y%s, p2x%s, p2y%s' % (left, top, right, bottom))
+
+            im = im.crop((left, top, right, bottom))  # defines crop points
+            im.save(config.cache_path + filename + '.png')  # saves new cropped image
         print('saved')
     except Exception as e:
         print('failed while create vcode session.')
