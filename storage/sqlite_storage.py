@@ -80,7 +80,8 @@ class SQLiteStorage:
         result_list = list()
         for r in result:
             result_list.append(WXIDRecord(r))
-        return result_list.reverse()
+        result_list.reverse()
+        return result_list
 
     def insert_article(self, article, local_url, author_name=''):
         c = self._connect.cursor()
