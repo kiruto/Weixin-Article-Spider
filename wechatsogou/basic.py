@@ -152,7 +152,7 @@ class WechatSogouBasic(WechatSogouBase):
     def _get_page_by_browser(self, url):
         driver = botdriver.get_driver()
         driver.get(url)
-        driver.implicitly_wait(60)
+        driver.implicitly_wait(10)
         time.sleep(3)
         # text = self._replace_html(driver.page_source)
         text = driver.page_source.encode('utf-8')
@@ -181,12 +181,13 @@ class WechatSogouBasic(WechatSogouBase):
             # try to solve vcode
             common.save_raw_error_log(response_text)
             vcode.create_session(driver)
-        for i in range(60):
-            time.sleep(1)
-            if vcode.solved:
-                check_vcode = False
-                break
-        vcode.close_session()
+        if check_vcode:
+            for i in range(60):
+                time.sleep(1)
+                if vcode.solved:
+                    check_vcode = False
+                    break
+            vcode.close_session()
         return not check_vcode
 
     def _check_vcode(self, response_text):
