@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import random
 import threading
 import traceback
 import time
@@ -37,8 +38,11 @@ def start():
 
     global _thread
     wxid_list = _db_helper.get_wxid_list()
+    random.shuffle(wxid_list)
     if status == constants.IDLE:
-        _thread = SpiderThread(wxid_list)
+        _thread = SpiderThread(wxid_list[:19])
+        if len(wxid_list) > 20:
+            _thread.d('微信号太多了会被封，随机抓取20个。')
         _thread.start()
         return True
     return False
